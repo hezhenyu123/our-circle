@@ -21,6 +21,7 @@
       wx:for="{{notifications}}"
       wx:key="_id"
       data-id="{{item.post_id}}"
+      data-notification-id="{{item._id}}"
       bindtap="onTapNotification"
     >
       <view class="notif-avatar" style="background: {{item.fromChild.color}}20;">

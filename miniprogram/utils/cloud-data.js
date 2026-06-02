@@ -281,6 +281,16 @@ async function markNotificationsRead(childId) {
   await Promise.all(tasks)
 }
 
+/**
+ * 标记单条通知已读
+ */
+async function markNotificationRead(notificationId) {
+  if (!notificationId) return
+  await db.collection('notifications').doc(notificationId).update({
+    data: { read: true }
+  })
+}
+
 // ============ 文件上传 ============
 
 /**
@@ -456,6 +466,7 @@ module.exports = {
   addNotification,
   getNotifications,
   markNotificationsRead,
+  markNotificationRead,
   uploadFile,
   getTempFileURL,
   getChildInfo,

@@ -48,13 +48,7 @@ Page({
     const currentChild = cloudData.getCurrentChild()
     if (!currentChild) return
     const notifications = await cloudData.getNotifications(currentChild._id)
-    const lastSeen = wx.getStorageSync('lastNotificationSeenTime') || 0
-    const unread = notifications.filter(n => {
-      if (n.read) return false
-      // 通知时间早于上次查看消息时间，视为已读
-      const t = n.created_at instanceof Date ? n.created_at.getTime() : (typeof n.created_at === 'number' ? n.created_at : 0)
-      return t > lastSeen
-    }).length
+    const unread = notifications.filter(n => !n.read).length
     if (unread > 0) {
       wx.setTabBarBadge({ index: 1, text: String(unread) })
     } else {

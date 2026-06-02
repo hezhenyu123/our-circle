@@ -10,16 +10,23 @@ Page({
   },
 
   onShow() {
-    // 立即清除红点，不等异步操作
-    wx.removeTabBarBadge({ index: 1 })
-    wx.setStorageSync('lastNotificationSeenTime', Date.now())
     this.loadNotifications()
+  },
+
+  updateTabBadge(notifications = this.data.notifications) {
+    const unreadCount = notifications.filter(item => !item.read).length
+    if (unreadCount > 0) {
+      wx.setTabBarBadge({ index: 1, text: String(unreadCount) })
+      return
+    }
+    wx.removeTabBarBadge({ index: 1 })
   },
 
   async loadNotifications() {
     const currentChild = cloudData.getCurrentChild()
     if (!currentChild) {
       this.setData({ notifications: [], currentChild: null })
+      wx.removeTabBarBadge({ index: 1 })
       return
     }
 
@@ -38,11 +45,7 @@ Page({
       })
 
       this.setData({ notifications, currentChild })
-
-      // 标记已读（后台执行，不阻塞UI）
-      cloudData.markNotificationsRead(currentChild._id).catch(e => {
-        console.error('标记已读失败', e)
-      })
+      this.updateTabBadge(notifications)
     } catch (e) {
       console.error('加载通知失败', e)
     }
@@ -50,7 +53,25 @@ Page({
 
   onTapNotification(e) {
     const postId = e.currentTarget.dataset.id
+    const notificationId = e.currentTarget.dataset.notificationId
     if (!postId) return
+
+    const index = this.data.notifications.findIndex(item => item._id === notificationId)
+    if (index !== -1 && !this.data.notifications[index].read) {
+      this.setData({
+        [`notifications[${index}].read`]: true
+      })
+      this.updateTabBadge()
+
+      cloudData.markNotificationRead(notificationId).catch(err => {
+        console.error('标记单条通知已读失败', err)
+        this.setData({
+          [`notifications[${index}].read`]: false
+        })
+        this.updateTabBadge()
+      })
+    }
+
     wx.navigateTo({ url: `/pages/detail/detail?id=${postId}` })
   },
 

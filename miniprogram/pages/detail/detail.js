@@ -37,7 +37,6 @@ Page({
 
   async loadPost() {
     try {
-      const posts = await cloudData.getPosts()
       const post = await cloudData.getPostById(this.data.postId)
       if (!post) {
         wx.showToast({ title: '动态不存在', icon: 'none' })
