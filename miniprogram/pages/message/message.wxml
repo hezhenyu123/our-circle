@@ -1,5 +1,12 @@
 <!-- pages/message/message.wxml - 消息通知 -->
 <view class="page-message">
+  <view class="message-hero">
+    <view>
+      <text class="message-title">消息中心</text>
+      <text class="message-subtitle">点赞、评论和新动态都会在这里提醒你</text>
+    </view>
+  </view>
+
   <!-- 无身份提示 -->
   <view class="empty-tip" wx:if="{{!currentChild}}">
     <text class="empty-icon">👶</text>
@@ -15,7 +22,7 @@
   </view>
 
   <!-- 消息列表 -->
-  <view class="notification-list">
+  <view class="notification-list" wx:else>
     <view
       class="notification-item card {{item.read ? '' : 'unread'}}"
       wx:for="{{notifications}}"

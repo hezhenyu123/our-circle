@@ -3,6 +3,22 @@ const app = getApp()
 const util = require('../../utils/util.js')
 const cloudData = require('../../utils/cloud-data.js')
 
+function getReadNotificationStorageKey(childId) {
+  return `readNotificationIds_${childId}`
+}
+
+function getLocalReadNotificationIds(childId) {
+  if (!childId) return []
+  return wx.getStorageSync(getReadNotificationStorageKey(childId)) || []
+}
+
+function saveLocalReadNotificationId(childId, notificationId) {
+  if (!childId || !notificationId) return
+  const currentIds = getLocalReadNotificationIds(childId)
+  if (currentIds.includes(notificationId)) return
+  wx.setStorageSync(getReadNotificationStorageKey(childId), currentIds.concat(notificationId))
+}
+
 Page({
   data: {
     notifications: [],
@@ -32,12 +48,14 @@ Page({
 
     try {
       let notifications = await cloudData.getNotifications(currentChild._id)
+      const localReadIds = getLocalReadNotificationIds(currentChild._id)
 
       // 附加触发者信息
       notifications = notifications.map(n => {
         const fromChild = cloudData.getChildInfo(n.from_child_id) || { nickname: '未知', avatar: '❓', color: '#999' }
         return {
           ...n,
+          read: n.read || localReadIds.includes(n._id),
           fromChild,
           timeText: util.formatTime(n.created_at),
           desc: n.type === 'like' ? '给你点了❤️' : n.type === 'new_post' ? '发了一条新动态' : '评论了你的动态'
@@ -58,17 +76,17 @@ Page({
 
     const index = this.data.notifications.findIndex(item => item._id === notificationId)
     if (index !== -1 && !this.data.notifications[index].read) {
-      this.setData({
-        [`notifications[${index}].read`]: true
-      })
-      this.updateTabBadge()
+      const notifications = this.data.notifications.slice()
+      notifications[index] = {
+        ...notifications[index],
+        read: true
+      }
+      saveLocalReadNotificationId(this.data.currentChild && this.data.currentChild._id, notificationId)
+      this.setData({ notifications })
+      this.updateTabBadge(notifications)
 
       cloudData.markNotificationRead(notificationId).catch(err => {
         console.error('标记单条通知已读失败', err)
-        this.setData({
-          [`notifications[${index}].read`]: false
-        })
-        this.updateTabBadge()
       })
     }
 

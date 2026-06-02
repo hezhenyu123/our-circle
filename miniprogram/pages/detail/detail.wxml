@@ -51,6 +51,7 @@
         <view class="text-mood" wx:if="{{post.content.mood_emoji}}">
           <text class="mood-emoji-lg">{{post.content.mood_emoji}}</text>
         </view>
+        <image wx:if="{{post.content.image_url}}" class="detail-image text-photo" src="{{post.content.image_url}}" mode="aspectFill" />
         <view class="emoji-stickers" wx:if="{{post.emojiStickers.length > 0}}">
           <text class="sticker" wx:for="{{post.emojiStickers}}" wx:key="keyword">
             {{item.emoji}} {{item.keyword}}

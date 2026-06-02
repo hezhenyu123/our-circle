@@ -1,7 +1,8 @@
 /* pages/post/post.wxss */
 .page-post {
   min-height: 100vh;
-  background: #F5F5F5;
+  background:
+    linear-gradient(180deg, #FFF0E1 0, #FFF8EE 200rpx, #F5FBF6 200rpx, #F6F3EE 100%);
 }
 
 /* 顶部栏 - 已改用原生导航栏，此样式保留备用 */
@@ -21,15 +22,15 @@
   right: 0;
   padding: 20rpx 24rpx;
   padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-  background: #FFFFFF;
-  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
+  background: rgba(255, 252, 248, 0.96);
+  box-shadow: 0 -10rpx 24rpx rgba(194, 170, 157, 0.12);
   z-index: 100;
 }
 
 .submit-btn-full {
   width: 100%;
   height: 88rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  background: linear-gradient(135deg, #F56B6F, #FF8E77);
   color: #FFFFFF;
   font-size: 32rpx;
   font-weight: 600;
@@ -37,7 +38,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+  box-shadow: 0 10rpx 24rpx rgba(245, 107, 111, 0.24);
   transition: all 0.3s ease;
 }
 
@@ -55,7 +56,9 @@
   justify-content: center;
   min-height: 100vh;
   padding: 60rpx 40rpx;
-  background: #FFFFFF;
+  background:
+    radial-gradient(circle at top, rgba(255, 215, 198, 0.52), transparent 34%),
+    linear-gradient(180deg, #FFF8F3, #F7F0EA);
 }
 
 .selector-header {
@@ -67,19 +70,21 @@
   display: block;
   font-size: 44rpx;
   font-weight: 700;
-  color: #333;
+  color: #2F2A26;
   margin-bottom: 16rpx;
 }
 
 .selector-subtitle {
   font-size: 28rpx;
-  color: #999;
+  color: #8B7C73;
 }
 
 .type-options {
   display: flex;
   gap: 48rpx;
   margin-bottom: 80rpx;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .type-item {
@@ -87,6 +92,11 @@
   flex-direction: column;
   align-items: center;
   gap: 12rpx;
+  width: 220rpx;
+  padding: 26rpx 18rpx;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.97), rgba(255, 249, 241, 0.93));
+  border-radius: 30rpx;
+  box-shadow: 0 12rpx 28rpx rgba(194, 170, 157, 0.12);
 }
 
 .type-icon-wrap {
@@ -99,19 +109,19 @@
 }
 
 .voice-bg {
-  background: #FFE0E0;
+  background: linear-gradient(135deg, #FFE4E6, #FFF0F1);
 }
 
 .photo-bg {
-  background: #D4EFDF;
+  background: linear-gradient(135deg, #DCF5E8, #EEFBEF);
 }
 
 .draw-bg {
-  background: #E8DAEF;
+  background: linear-gradient(135deg, #F4E6FA, #FAF0FF);
 }
 
 .text-bg {
-  background: #FFF3CD;
+  background: linear-gradient(135deg, #FFF1CB, #FFF8E1);
 }
 
 .type-icon {
@@ -121,17 +131,17 @@
 .type-label {
   font-size: 28rpx;
   font-weight: 600;
-  color: #333;
+  color: #2F2A26;
 }
 
 .type-desc {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
 }
 
 .cancel-btn {
   padding: 20rpx 48rpx;
-  color: #999;
+  color: #8C7F76;
   font-size: 28rpx;
 }
 
@@ -163,13 +173,13 @@
 
 .hint-text {
   font-size: 32rpx;
-  color: #333;
+  color: #2F2A26;
   font-weight: 500;
 }
 
 .hint-sub {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
 }
 
 /* 录音中动画 */
@@ -189,7 +199,7 @@
 
 .wave-bar {
   width: 12rpx;
-  background: #FF6B6B;
+  background: #F56B6F;
   border-radius: 6rpx;
   animation: wave 0.8s ease-in-out infinite alternate;
 }
@@ -208,12 +218,12 @@
 .recording-time {
   font-size: 36rpx;
   font-weight: 700;
-  color: #FF6B6B;
+  color: #F56B6F;
 }
 
 .recording-hint {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
 }
 
 /* 录音结果 - 语音预览气泡 */
@@ -230,7 +240,7 @@
   display: flex;
   align-items: center;
   gap: 8rpx;
-  background: #E8F5E9;
+  background: #EAF7EF;
   padding: 12rpx 24rpx;
   border-radius: 24rpx;
 }
@@ -251,7 +261,7 @@
   display: flex;
   align-items: center;
   gap: 16rpx;
-  background: #95EC69;
+  background: linear-gradient(135deg, #AEE483, #97D86E);
   padding: 20rpx 28rpx;
   border-radius: 20rpx;
   min-width: 280rpx;
@@ -303,7 +313,7 @@
 .redo-btn {
   margin-top: 24rpx;
   text-align: center;
-  color: #FF6B6B;
+  color: #F56B6F;
   font-size: 28rpx;
   padding: 12rpx 0;
 }
@@ -324,18 +334,18 @@
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  background: linear-gradient(135deg, #F56B6F, #FF8E77);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 32rpx rgba(255, 107, 107, 0.4);
+  box-shadow: 0 14rpx 32rpx rgba(245, 107, 111, 0.28);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .record-btn.recording {
   transform: scale(1.15);
-  background: linear-gradient(135deg, #E55555, #FF6B6B);
-  box-shadow: 0 12rpx 48rpx rgba(255, 107, 107, 0.6);
+  background: linear-gradient(135deg, #E85A61, #F56B6F);
+  box-shadow: 0 16rpx 42rpx rgba(245, 107, 111, 0.36);
   animation: recordPulse 1s ease-in-out infinite;
 }
 
@@ -351,7 +361,7 @@
 
 .record-btn-text {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
 }
 
 /* 文字发动态 */
@@ -361,10 +371,11 @@
 
 .text-input-section {
   margin: 24rpx;
-  background: #FFFFFF;
-  border-radius: 20rpx;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.97), rgba(245, 250, 255, 0.92));
+  border-radius: 28rpx;
   padding: 24rpx;
   position: relative;
+  box-shadow: 0 12rpx 28rpx rgba(194, 170, 157, 0.1);
 }
 
 .text-post-input {
@@ -372,7 +383,7 @@
   min-height: 240rpx;
   font-size: 32rpx;
   line-height: 48rpx;
-  color: #333;
+  color: #2F2A26;
   box-sizing: border-box;
   padding: 0;
 }
@@ -381,7 +392,7 @@
   display: block;
   text-align: right;
   font-size: 22rpx;
-  color: #CCC;
+  color: #B6A79B;
   margin-top: 8rpx;
 }
 
@@ -391,6 +402,53 @@
   gap: 12rpx;
   padding: 0 24rpx;
   margin-bottom: 20rpx;
+}
+
+.text-photo-section {
+  padding: 0 24rpx 8rpx;
+}
+
+.text-photo-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 14rpx 22rpx;
+  background: linear-gradient(135deg, #FFF2E6, #F3FAFF);
+  border-radius: 999rpx;
+  color: #6B5F58;
+}
+
+.text-photo-icon {
+  font-size: 28rpx;
+}
+
+.text-photo-label {
+  font-size: 24rpx;
+  color: #6B5F58;
+}
+
+.text-photo-preview {
+  position: relative;
+  width: 100%;
+  margin-top: 18rpx;
+}
+
+.text-photo-image {
+  width: 100%;
+  height: 360rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #F7ECE2, #EEF7FF);
+}
+
+.text-photo-remove {
+  position: absolute;
+  right: 18rpx;
+  bottom: 18rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(47, 42, 38, 0.72);
+  color: #FFFFFF;
+  font-size: 22rpx;
 }
 
 .emoji-stickers-preview .sticker {
@@ -407,7 +465,7 @@
 .quick-emoji-label {
   display: block;
   font-size: 26rpx;
-  color: #999;
+  color: #8C7F76;
   margin-bottom: 16rpx;
 }
 
@@ -423,15 +481,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F5F5F5;
+  background: linear-gradient(135deg, #FFF2E8, #F6FAFF);
   border-radius: 16rpx;
   font-size: 40rpx;
   border: 3rpx solid transparent;
 }
 
 .quick-emoji-item.selected {
-  border-color: #FF6B6B;
-  background: #FFF0F0;
+  border-color: #F56B6F;
+  background: #FFEAE6;
 }
 
 /* 拍照动态 */
@@ -446,8 +504,8 @@
 .preview-image {
   width: 100%;
   height: 500rpx;
-  border-radius: 20rpx;
-  background: #F0F0F0;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #F7ECE2, #EEF7FF);
 }
 
 /* 心情选择 */
@@ -457,7 +515,7 @@
 
 .mood-label {
   font-size: 28rpx;
-  color: #666;
+  color: #6B5F58;
   margin-bottom: 16rpx;
   display: block;
 }
@@ -471,7 +529,7 @@
   width: 88rpx;
   height: 88rpx;
   border-radius: 50%;
-  background: #F5F5F5;
+  background: linear-gradient(135deg, #FFF2E8, #F7FBFF);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -479,8 +537,8 @@
 }
 
 .mood-item.selected {
-  border-color: #FF6B6B;
-  background: #FFF0F0;
+  border-color: #F56B6F;
+  background: #FFEAE6;
 }
 
 .mood-emoji {
@@ -495,12 +553,13 @@
 .photo-text-input {
   width: 100%;
   min-height: 160rpx;
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.97), rgba(245, 250, 255, 0.92));
+  border-radius: 24rpx;
   padding: 20rpx;
   font-size: 28rpx;
   line-height: 44rpx;
   box-sizing: border-box;
+  box-shadow: 0 12rpx 28rpx rgba(194, 170, 157, 0.1);
 }
 
 /* 画画动态 */
@@ -553,5 +612,5 @@
 
 .drawing-empty-text {
   font-size: 28rpx;
-  color: #999;
+  color: #8C7F76;
 }

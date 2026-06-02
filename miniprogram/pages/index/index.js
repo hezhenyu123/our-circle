@@ -3,6 +3,15 @@ const app = getApp()
 const util = require('../../utils/util.js')
 const cloudData = require('../../utils/cloud-data.js')
 
+function getReadNotificationStorageKey(childId) {
+  return `readNotificationIds_${childId}`
+}
+
+function getLocalReadNotificationIds(childId) {
+  if (!childId) return []
+  return wx.getStorageSync(getReadNotificationStorageKey(childId)) || []
+}
+
 Page({
   data: {
     currentChild: null,
@@ -48,7 +57,8 @@ Page({
     const currentChild = cloudData.getCurrentChild()
     if (!currentChild) return
     const notifications = await cloudData.getNotifications(currentChild._id)
-    const unread = notifications.filter(n => !n.read).length
+    const localReadIds = getLocalReadNotificationIds(currentChild._id)
+    const unread = notifications.filter(n => !n.read && !localReadIds.includes(n._id)).length
     if (unread > 0) {
       wx.setTabBarBadge({ index: 1, text: String(unread) })
     } else {

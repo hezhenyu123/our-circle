@@ -1,22 +1,23 @@
 /* pages/create-identity/create-identity.wxss */
 .page-create {
   min-height: 100vh;
-  background: #F5F5F5;
+  background:
+    linear-gradient(180deg, #FFF0E1 0, #FFF7ED 220rpx, #F3FAF5 220rpx, #F6F3EE 100%);
   padding: 24rpx;
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 }
 
 /* 预览卡片 */
 .preview-card {
-  background: #FFFFFF;
-  border-radius: 24rpx;
+  background: linear-gradient(180deg, #FFFDFB, #FFF5E9);
+  border-radius: 34rpx;
   padding: 40rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+  box-shadow: 0 14rpx 32rpx rgba(194, 170, 157, 0.14);
 }
 
 .preview-avatar {
@@ -36,33 +37,34 @@
 .preview-name {
   font-size: 36rpx;
   font-weight: 600;
-  color: #333;
+  color: #2F2A26;
 }
 
 .preview-grade {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
 }
 
 /* 表单区块 */
 .form-section {
-  background: #FFFFFF;
-  border-radius: 20rpx;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.97), rgba(244, 250, 246, 0.92));
+  border-radius: 28rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
+  box-shadow: 0 12rpx 28rpx rgba(194, 170, 157, 0.1);
 }
 
 .form-label {
   font-size: 26rpx;
-  color: #999;
+  color: #8C7F76;
   margin-bottom: 16rpx;
   display: block;
 }
 
 .form-input {
   font-size: 32rpx;
-  color: #333;
-  border-bottom: 2rpx solid #F0F0F0;
+  color: #2F2A26;
+  border-bottom: 2rpx solid #F0E4DA;
   padding: 12rpx 0;
 }
 
@@ -76,8 +78,8 @@
 .avatar-option {
   width: 80rpx;
   height: 80rpx;
-  border-radius: 50%;
-  background: #F5F5F5;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #FFF3EA, #F3FAF5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,9 +88,9 @@
 }
 
 .avatar-option.selected {
-  border-color: #FF6B6B;
-  background: #FFF0F0;
-  transform: scale(1.1);
+  border-color: #F56B6F;
+  background: #FFEAE6;
+  transform: scale(1.06);
 }
 
 .avatar-emoji {
@@ -104,7 +106,7 @@
 .custom-avatar-img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 24rpx;
 }
 
 .custom-avatar-placeholder {
@@ -122,7 +124,7 @@
 
 .custom-avatar-text {
   font-size: 16rpx;
-  color: #999;
+  color: #9A8C82;
   line-height: 1;
 }
 
@@ -142,17 +144,17 @@
 .grade-btn {
   padding: 12rpx 28rpx;
   border-radius: 20rpx;
-  background: #F5F5F5;
+  background: linear-gradient(135deg, #FFF3EA, #F4FBF7);
   font-size: 26rpx;
-  color: #666;
+  color: #6C6058;
   border: 2rpx solid transparent;
   transition: all 0.2s;
 }
 
 .grade-btn.selected {
-  background: #FFE8E8;
-  border-color: #FF6B6B;
-  color: #FF6B6B;
+  background: #FFEAE6;
+  border-color: #F56B6F;
+  color: #F56B6F;
   font-weight: 600;
 }
 
@@ -175,8 +177,8 @@
 }
 
 .color-option.selected {
-  border-color: #333;
-  background: #F8F8F8;
+  border-color: #2F2A26;
+  background: linear-gradient(135deg, #FFF7EF, #F2FAF4);
 }
 
 .color-circle {
@@ -187,7 +189,7 @@
 
 .color-name {
   font-size: 20rpx;
-  color: #999;
+  color: #9A8C82;
 }
 
 /* 提交按钮 */
@@ -198,7 +200,7 @@
 .submit-btn {
   width: 100%;
   height: 88rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  background: linear-gradient(135deg, #F56B6F, #FF8E77);
   color: #FFFFFF;
   font-size: 32rpx;
   font-weight: 600;
@@ -206,7 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+  box-shadow: 0 10rpx 24rpx rgba(245, 107, 111, 0.24);
   transition: all 0.3s ease;
 }
 
@@ -223,16 +225,16 @@
 .delete-btn {
   width: 100%;
   height: 80rpx;
-  color: #FF4444;
+  color: #C8646A;
   font-size: 28rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 16rpx;
-  background: #FFF5F5;
+  background: #FFF1F2;
   border-radius: 40rpx;
 }
 
 .delete-btn:active {
-  background: #FFE0E0;
+  background: #FFE4E5;
 }

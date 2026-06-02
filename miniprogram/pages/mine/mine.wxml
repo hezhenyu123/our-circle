@@ -87,12 +87,20 @@
       bindtap="onTapPost"
       bindlongpress="onLongPressPost"
     >
-      <!-- 动态内容摘要 -->
-      <view class="post-summary">
-        <text class="summary-type">{{item.type === 'voice' ? '🎤' : item.type === 'photo' ? '📸' : item.type === 'text' ? '✏️' : '🎨'}}</text>
-        <text class="summary-text" wx:if="{{item.type === 'voice'}}">语音动态 {{item.content.voice_duration}}"</text>
-        <text class="summary-text" wx:elif="{{item.content.text}}">{{item.content.text}}</text>
-        <text class="summary-text" wx:else>{{item.type === 'photo' ? '拍照动态' : item.type === 'drawing' ? '画画动态' : '文字动态'}}</text>
+      <view class="my-post-main">
+        <!-- 动态内容摘要 -->
+        <view class="post-summary">
+          <text class="summary-type">{{item.type === 'voice' ? '🎤' : item.type === 'photo' ? '📸' : item.type === 'text' ? '✏️' : '🎨'}}</text>
+          <text class="summary-text" wx:if="{{item.type === 'voice'}}">语音动态 {{item.content.voice_duration}}"</text>
+          <text class="summary-text" wx:elif="{{item.content.text}}">{{item.content.text}}</text>
+          <text class="summary-text" wx:else>{{item.type === 'photo' ? '拍照动态' : item.type === 'drawing' ? '画画动态' : '文字动态'}}</text>
+        </view>
+        <image
+          wx:if="{{item.content.image_url}}"
+          class="post-thumb"
+          src="{{item.content.image_url}}"
+          mode="aspectFill"
+        />
       </view>
       <view class="post-meta">
         <text class="meta-time">{{item.timeText}}</text>

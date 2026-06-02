@@ -147,6 +147,7 @@
               <text class="mood-emoji">{{item.content.mood_emoji}}</text>
             </view>
           </view>
+          <image wx:if="{{item.content.image_url}}" class="post-image text-photo" src="{{item.content.image_url}}" mode="aspectFill" />
           <view class="emoji-stickers flex-row" wx:if="{{item.emojiStickers && item.emojiStickers.length > 0}}">
             <text class="sticker" wx:for="{{item.emojiStickers}}" wx:for-item="sticker" wx:key="keyword">
               {{sticker.emoji}}

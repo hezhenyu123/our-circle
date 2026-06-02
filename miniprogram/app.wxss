@@ -1,8 +1,8 @@
 /* app.wxss - 全局样式 */
 page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #F5F5F5;
-  color: #333333;
+  background-color: #F6F3EE;
+  color: #2F2A26;
   font-size: 28rpx;
   line-height: 1.6;
 }
@@ -43,28 +43,30 @@ page {
 
 /* 圆角卡片 */
 .card {
-  background: #FFFFFF;
-  border-radius: 24rpx;
+  background: #FFFCF8;
+  border-radius: 30rpx;
   padding: 24rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid rgba(243, 226, 215, 0.9);
+  box-shadow: 0 12rpx 32rpx rgba(194, 170, 157, 0.12);
   transition: transform 0.15s ease;
 }
 
 .card:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
 }
 
 /* 头像 */
 .avatar {
-  width: 72rpx;
-  height: 72rpx;
+  width: 76rpx;
+  height: 76rpx;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 36rpx;
   overflow: hidden;
+  box-shadow: inset 0 0 0 1rpx rgba(255, 255, 255, 0.45);
 }
 
 .avatar-img {
@@ -75,13 +77,14 @@ page {
 
 /* 按钮 */
 .btn-primary {
-  background: #FF6B6B;
+  background: linear-gradient(135deg, #F56B6F, #FF8E77);
   color: #FFFFFF;
   border: none;
   border-radius: 44rpx;
   padding: 20rpx 48rpx;
   font-size: 30rpx;
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: 0 10rpx 26rpx rgba(245, 107, 111, 0.24);
 }
 
 .btn-primary::after {

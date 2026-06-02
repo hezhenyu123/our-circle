@@ -20,6 +20,7 @@ Page({
     photoText: '',
     drawingPath: '',
     textContent: '',
+    textPhotoPath: '',
     textEmojiStickers: [],
     textSelectedEmoji: '',
     quickEmojis: ['😄', '😢', '😡', '😮', '😍', '🤗', '😴', '🤔', '👍', '❤️', '🎉', '✨'],
@@ -120,17 +121,43 @@ Page({
     const text = e.detail.value
     const emojiMap = app.globalData.emojiMap
     const stickers = util.matchEmoji(text, emojiMap)
-    const canSubmit = text.trim().length > 0 || !!this.data.textSelectedEmoji
+    const canSubmit = text.trim().length > 0 || !!this.data.textSelectedEmoji || !!this.data.textPhotoPath
     this.setData({ textContent: text, textEmojiStickers: stickers, canSubmitText: canSubmit })
   },
 
   onSelectQuickEmoji(e) {
     const emoji = e.currentTarget.dataset.emoji
     if (this.data.textSelectedEmoji === emoji) {
-      this.setData({ textSelectedEmoji: '', canSubmitText: this.data.textContent.trim().length > 0 })
+      this.setData({
+        textSelectedEmoji: '',
+        canSubmitText: this.data.textContent.trim().length > 0 || !!this.data.textPhotoPath
+      })
     } else {
       this.setData({ textSelectedEmoji: emoji, canSubmitText: true })
     }
+  },
+
+  onChooseTextPhoto() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const file = res.tempFiles && res.tempFiles[0]
+        if (!file) return
+        this.setData({
+          textPhotoPath: file.tempFilePath,
+          canSubmitText: true
+        })
+      }
+    })
+  },
+
+  onRemoveTextPhoto() {
+    this.setData({
+      textPhotoPath: '',
+      canSubmitText: this.data.textContent.trim().length > 0 || !!this.data.textSelectedEmoji
+    })
   },
 
   // ============ 拍照动态 ============
@@ -196,13 +223,13 @@ Page({
         voice_url: '', voice_duration: 0, mood_emoji: '', emoji_stickers: []
       }
     } else if (this.data.postType === 'text') {
-      if (!this.data.textContent.trim() && !this.data.textSelectedEmoji) {
+      if (!this.data.textContent.trim() && !this.data.textSelectedEmoji && !this.data.textPhotoPath) {
         wx.showToast({ title: '写点什么吧', icon: 'none' })
         this.setData({ submitting: false })
         return
       }
       post.content = {
-        text: this.data.textContent, image_url: '', voice_url: '',
+        text: this.data.textContent, image_url: this.data.textPhotoPath, voice_url: '',
         voice_duration: 0, mood_emoji: this.data.textSelectedEmoji,
         emoji_stickers: this.data.textEmojiStickers
       }

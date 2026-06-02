@@ -4,20 +4,23 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
+  background: linear-gradient(180deg, #FFF7EC, #F4FBF6);
 }
 
 .draw-canvas {
   flex: 1;
   width: 100%;
   background: #FFFFFF;
+  border-bottom-left-radius: 28rpx;
+  border-bottom-right-radius: 28rpx;
 }
 
 .toolbar {
-  background: #F8F8F8;
-  border-top: 1rpx solid #E0E0E0;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.98), rgba(241, 249, 244, 0.96));
+  border-top: 1rpx solid #F0E4DA;
   padding: 16rpx 24rpx;
   padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -10rpx 24rpx rgba(194, 170, 157, 0.12);
 }
 
 .tool-row {
@@ -32,7 +35,7 @@
 
 .tool-label {
   font-size: 24rpx;
-  color: #999;
+  color: #8C7F76;
   width: 64rpx;
   flex-shrink: 0;
 }
@@ -56,7 +59,7 @@
 }
 
 .color-dot.active {
-  border-color: #333;
+  border-color: #2F2A26;
   transform: scale(1.15);
 }
 
@@ -80,16 +83,16 @@
 .size-btn {
   padding: 8rpx 20rpx;
   border-radius: 20rpx;
-  background: #FFFFFF;
-  border: 2rpx solid #E0E0E0;
+  background: #FFF8F2;
+  border: 2rpx solid #F0E4DA;
   font-size: 24rpx;
-  color: #666;
+  color: #6B5F58;
   transition: all 0.2s;
 }
 
 .size-btn.active {
-  background: #FF6B6B;
-  border-color: #FF6B6B;
+  background: #F56B6F;
+  border-color: #F56B6F;
   color: #FFFFFF;
 }
 
@@ -110,21 +113,21 @@
 .tool-action {
   padding: 8rpx 16rpx;
   border-radius: 16rpx;
-  background: #FFFFFF;
-  border: 2rpx solid #E0E0E0;
+  background: #FFF8F2;
+  border: 2rpx solid #F0E4DA;
   font-size: 22rpx;
-  color: #666;
+  color: #6B5F58;
   transition: all 0.2s;
 }
 
 .tool-action.active {
-  background: #FFF3E0;
-  border-color: #FF8C00;
-  color: #FF8C00;
+  background: #FFF1DE;
+  border-color: #F6C969;
+  color: #B37D1A;
 }
 
 .tool-action.danger {
-  color: #FF6B6B;
+  color: #C8646A;
 }
 
 .tool-action.disabled {
@@ -137,13 +140,13 @@
 
 /* 完成按钮 */
 .finish-btn {
-  background: #FF6B6B;
+  background: linear-gradient(135deg, #F56B6F, #FF8E77);
   color: #FFFFFF;
   padding: 12rpx 32rpx;
   border-radius: 32rpx;
   font-size: 28rpx;
   font-weight: bold;
-  box-shadow: 0 4rpx 12rpx rgba(255,107,107,0.3);
+  box-shadow: 0 8rpx 18rpx rgba(245, 107, 111, 0.22);
 }
 
 .finish-btn:active {

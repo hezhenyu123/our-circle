@@ -9,16 +9,16 @@
     "pages/message/message"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#FF6B6B",
+    "navigationBarBackgroundColor": "#F56B6F",
     "navigationBarTitleText": "我们的圈子",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F5F5",
+    "backgroundColor": "#F6F3EE",
     "backgroundTextStyle": "dark"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF6B6B",
-    "backgroundColor": "#FFFFFF",
+    "color": "#9E9188",
+    "selectedColor": "#F56B6F",
+    "backgroundColor": "#FFFCF8",
     "borderStyle": "black",
     "list": [
       {

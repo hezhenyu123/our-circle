@@ -124,6 +124,19 @@
       <text class="text-count">{{textContent.length || 0}}/200</text>
     </view>
 
+    <view class="text-photo-section">
+      <view class="text-photo-trigger" bindtap="onChooseTextPhoto">
+        <text class="text-photo-icon">{{textPhotoPath ? '🖼️' : '➕'}}</text>
+        <text class="text-photo-label">{{textPhotoPath ? '重新选照片' : '添加一张照片'}}</text>
+      </view>
+      <view class="text-photo-preview" wx:if="{{textPhotoPath}}">
+        <image class="text-photo-image" src="{{textPhotoPath}}" mode="aspectFill" />
+        <view class="text-photo-remove" bindtap="onRemoveTextPhoto">
+          <text>移除</text>
+        </view>
+      </view>
+    </view>
+
     <!-- emoji贴纸预览 -->
     <view class="emoji-stickers-preview" wx:if="{{textEmojiStickers.length > 0}}">
       <text class="sticker" wx:for="{{textEmojiStickers}}" wx:key="keyword">
