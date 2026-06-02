@@ -1,0 +1,557 @@
+/* pages/post/post.wxss */
+.page-post {
+  min-height: 100vh;
+  background: #F5F5F5;
+}
+
+/* 顶部栏 - 已改用原生导航栏，此样式保留备用 */
+.post-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background: #FFFFFF;
+}
+
+/* 固定底部提交按钮 */
+.fixed-submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 24rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+.submit-btn-full {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.submit-btn-full.disabled {
+  background: #D9D9D9;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* 类型选择 */
+.type-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 60rpx 40rpx;
+  background: #FFFFFF;
+}
+
+.selector-header {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.selector-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.selector-subtitle {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.type-options {
+  display: flex;
+  gap: 48rpx;
+  margin-bottom: 80rpx;
+}
+
+.type-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.type-icon-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-bg {
+  background: #FFE0E0;
+}
+
+.photo-bg {
+  background: #D4EFDF;
+}
+
+.draw-bg {
+  background: #E8DAEF;
+}
+
+.text-bg {
+  background: #FFF3CD;
+}
+
+.type-icon {
+  font-size: 64rpx;
+}
+
+.type-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.type-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.cancel-btn {
+  padding: 20rpx 48rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 录音区域 */
+.voice-post {
+  padding-bottom: 200rpx;
+}
+
+.record-area {
+  padding: 60rpx 24rpx;
+  text-align: center;
+  min-height: 400rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.hint-icon {
+  font-size: 80rpx;
+}
+
+.hint-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.hint-sub {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 录音中动画 */
+.recording {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.recording-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 8rpx;
+  height: 80rpx;
+}
+
+.wave-bar {
+  width: 12rpx;
+  background: #FF6B6B;
+  border-radius: 6rpx;
+  animation: wave 0.8s ease-in-out infinite alternate;
+}
+
+.wave-bar:nth-child(1) { height: 30rpx; animation-delay: 0s; }
+.wave-bar:nth-child(2) { height: 50rpx; animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { height: 70rpx; animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { height: 40rpx; animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { height: 60rpx; animation-delay: 0.4s; }
+
+@keyframes wave {
+  0% { transform: scaleY(0.5); }
+  100% { transform: scaleY(1.5); }
+}
+
+.recording-time {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FF6B6B;
+}
+
+.recording-hint {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 录音结果 - 语音预览气泡 */
+.record-result {
+  width: 100%;
+  padding: 0 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.record-done-badge {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: #E8F5E9;
+  padding: 12rpx 24rpx;
+  border-radius: 24rpx;
+}
+
+.done-check {
+  font-size: 28rpx;
+  color: #4CAF50;
+  font-weight: 700;
+}
+
+.done-text {
+  font-size: 26rpx;
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.voice-preview-bubble {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: #95EC69;
+  padding: 20rpx 28rpx;
+  border-radius: 20rpx;
+  min-width: 280rpx;
+  max-width: 500rpx;
+}
+
+.voice-preview-icon {
+  font-size: 32rpx;
+}
+
+.voice-preview-bars {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  flex: 1;
+}
+
+.vbar {
+  width: 6rpx;
+  border-radius: 3rpx;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.vbar:nth-child(1) { height: 12rpx; }
+.vbar:nth-child(2) { height: 24rpx; }
+.vbar:nth-child(3) { height: 32rpx; }
+.vbar:nth-child(4) { height: 20rpx; }
+.vbar:nth-child(5) { height: 14rpx; }
+
+.voice-preview-duration {
+  font-size: 26rpx;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.emoji-stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.sticker {
+  font-size: 40rpx;
+  background: #FFF8E1;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.redo-btn {
+  margin-top: 24rpx;
+  text-align: center;
+  color: #FF6B6B;
+  font-size: 28rpx;
+  padding: 12rpx 0;
+}
+
+/* 录音按钮 */
+.record-btn-wrap {
+  position: fixed;
+  bottom: 100rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.record-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(255, 107, 107, 0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.record-btn.recording {
+  transform: scale(1.15);
+  background: linear-gradient(135deg, #E55555, #FF6B6B);
+  box-shadow: 0 12rpx 48rpx rgba(255, 107, 107, 0.6);
+  animation: recordPulse 1s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+  0%, 100% { transform: scale(1.15); }
+  50% { transform: scale(1.2); }
+}
+
+.record-btn-icon {
+  font-size: 60rpx;
+  color: #FFFFFF;
+}
+
+.record-btn-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 文字发动态 */
+.text-post {
+  padding-bottom: 40rpx;
+}
+
+.text-input-section {
+  margin: 24rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  position: relative;
+}
+
+.text-post-input {
+  width: 100%;
+  min-height: 240rpx;
+  font-size: 32rpx;
+  line-height: 48rpx;
+  color: #333;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.text-count {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: #CCC;
+  margin-top: 8rpx;
+}
+
+.emoji-stickers-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  padding: 0 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.emoji-stickers-preview .sticker {
+  font-size: 28rpx;
+  background: #FFF8E1;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.quick-emoji-section {
+  padding: 24rpx;
+}
+
+.quick-emoji-label {
+  display: block;
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.quick-emoji-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.quick-emoji-item {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  font-size: 40rpx;
+  border: 3rpx solid transparent;
+}
+
+.quick-emoji-item.selected {
+  border-color: #FF6B6B;
+  background: #FFF0F0;
+}
+
+/* 拍照动态 */
+.photo-post {
+  padding-bottom: 40rpx;
+}
+
+.photo-preview {
+  padding: 24rpx;
+}
+
+.preview-image {
+  width: 100%;
+  height: 500rpx;
+  border-radius: 20rpx;
+  background: #F0F0F0;
+}
+
+/* 心情选择 */
+.mood-selector {
+  padding: 24rpx;
+}
+
+.mood-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.mood-options {
+  display: flex;
+  gap: 24rpx;
+}
+
+.mood-item {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid transparent;
+}
+
+.mood-item.selected {
+  border-color: #FF6B6B;
+  background: #FFF0F0;
+}
+
+.mood-emoji {
+  font-size: 44rpx;
+}
+
+/* 文字输入 */
+.text-input-area {
+  padding: 0 24rpx;
+}
+
+.photo-text-input {
+  width: 100%;
+  min-height: 160rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 44rpx;
+  box-sizing: border-box;
+}
+
+/* 画画动态 */
+.drawing-post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx;
+  min-height: 60vh;
+}
+
+.drawing-preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.drawing-preview-image {
+  width: 100%;
+  max-height: 500rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid #E0E0E0;
+}
+
+.redo-drawing {
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  background: #F0F0F0;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.redo-drawing:active {
+  background: #E0E0E0;
+}
+
+.drawing-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 100rpx;
+}
+
+.drawing-empty-icon {
+  font-size: 64rpx;
+}
+
+.drawing-empty-text {
+  font-size: 28rpx;
+  color: #999;
+}

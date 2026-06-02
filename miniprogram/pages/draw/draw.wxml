@@ -1,0 +1,71 @@
+<!-- pages/draw/draw.wxml - 画板页面 -->
+<view class="page-draw">
+  <!-- 画布 -->
+  <canvas
+    id="drawCanvas"
+    type="2d"
+    class="draw-canvas"
+    disable-scroll
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="onTouchEnd"
+  ></canvas>
+
+  <!-- 底部工具栏 -->
+  <view class="toolbar">
+    <!-- 颜色选择 -->
+    <view class="tool-row">
+      <view class="tool-label">颜色</view>
+      <view class="color-options">
+        <view
+          class="color-dot {{currentColor === item ? 'active' : ''}} {{isEraser ? 'dim' : ''}}"
+          wx:for="{{colors}}"
+          wx:key="*this"
+          style="background: {{item}}"
+          data-color="{{item}}"
+          bindtap="onSelectColor"
+        >
+          <view class="color-check" wx:if="{{currentColor === item && !isEraser}}">✓</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 粗细选择 -->
+    <view class="tool-row">
+      <view class="tool-label">粗细</view>
+      <view class="size-options">
+        <view
+          class="size-btn {{currentSizeIndex === index ? 'active' : ''}} {{isEraser ? 'dim' : ''}}"
+          wx:for="{{sizeLabels}}"
+          wx:key="*this"
+          wx:for-index="index"
+          data-index="{{index}}"
+          bindtap="onSelectSize"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="tool-row action-row">
+      <view class="action-btns">
+        <view class="tool-action {{canUndo ? '' : 'disabled'}}" bindtap="onUndo">
+          <text>↩️撤销</text>
+        </view>
+        <view class="tool-action {{canRedo ? '' : 'disabled'}}" bindtap="onRedo">
+          <text>↪️重做</text>
+        </view>
+        <view class="tool-action {{isEraser ? 'active' : ''}}" bindtap="onToggleEraser">
+          <text>🧹橡皮</text>
+        </view>
+        <view class="tool-action danger" bindtap="onClear">
+          <text>🗑️清空</text>
+        </view>
+      </view>
+      <view class="finish-btn" bindtap="onFinish">
+        <text>画好了 ✨</text>
+      </view>
+    </view>
+  </view>
+</view>

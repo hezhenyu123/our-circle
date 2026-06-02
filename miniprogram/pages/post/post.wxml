@@ -1,0 +1,222 @@
+<!-- pages/post/post.wxml - 发动态 -->
+<view class="page-post">
+  <!-- 类型选择 -->
+  <view class="type-selector" wx:if="{{showTypeSelector}}">
+    <view class="selector-header">
+      <text class="selector-title">发一条动态</text>
+      <text class="selector-subtitle">选择怎么发</text>
+    </view>
+    <view class="type-options">
+      <view class="type-item" data-type="voice" bindtap="onSelectType">
+        <view class="type-icon-wrap voice-bg">
+          <text class="type-icon">🎤</text>
+        </view>
+        <text class="type-label">语音</text>
+        <text class="type-desc">按住说话</text>
+      </view>
+      <view class="type-item" data-type="photo" bindtap="onSelectType">
+        <view class="type-icon-wrap photo-bg">
+          <text class="type-icon">📸</text>
+        </view>
+        <text class="type-label">拍照</text>
+        <text class="type-desc">拍一张</text>
+      </view>
+      <view class="type-item" data-type="text" bindtap="onSelectType">
+        <view class="type-icon-wrap text-bg">
+          <text class="type-icon">✏️</text>
+        </view>
+        <text class="type-label">文字</text>
+        <text class="type-desc">写一写</text>
+      </view>
+      <view class="type-item" data-type="drawing" bindtap="onSelectType">
+        <view class="type-icon-wrap draw-bg">
+          <text class="type-icon">🎨</text>
+        </view>
+        <text class="type-label">画画</text>
+        <text class="type-desc">画一幅</text>
+      </view>
+    </view>
+    <view class="cancel-btn" bindtap="onBack">
+      <text>取消</text>
+    </view>
+  </view>
+
+  <!-- 语音发动态 -->
+  <view class="voice-post" wx:if="{{postType === 'voice' && !showTypeSelector}}">
+    <!-- 录音区域 -->
+    <view class="record-area">
+      <view class="record-hint" wx:if="{{!isRecording && !voiceRecorded}}">
+        <text class="hint-icon">🎤</text>
+        <text class="hint-text">按住麦克风说话</text>
+        <text class="hint-sub">松手完成录音</text>
+      </view>
+
+      <!-- 录音中 -->
+      <view class="recording" wx:if="{{isRecording}}">
+        <view class="recording-wave">
+          <view class="wave-bar"></view>
+          <view class="wave-bar"></view>
+          <view class="wave-bar"></view>
+          <view class="wave-bar"></view>
+          <view class="wave-bar"></view>
+        </view>
+        <text class="recording-time">{{recordDuration}}s / 60s</text>
+        <text class="recording-hint">松手结束录音</text>
+      </view>
+
+      <!-- 录音完成，显示语音气泡预览 -->
+      <view class="record-result" wx:if="{{voiceRecorded}}">
+        <view class="record-done-badge">
+          <text class="done-check">✓</text>
+          <text class="done-text">录音完成</text>
+        </view>
+        <view class="voice-preview-bubble">
+          <text class="voice-preview-icon">🎤</text>
+          <view class="voice-preview-bars">
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+          </view>
+          <text class="voice-preview-duration">{{recordDuration}}"</text>
+        </view>
+        <view class="redo-btn" bindtap="onRedo">
+          <text>重新录音</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 固定底部的发出去按钮 -->
+    <view class="fixed-submit-bar" wx:if="{{voiceRecorded}}">
+      <view class="submit-btn-full" bindtap="onSubmit">
+        <text>发出去 ✨</text>
+      </view>
+    </view>
+
+    <!-- 长按录音按钮 -->
+    <view class="record-btn-wrap" wx:if="{{!voiceRecorded}}">
+      <view
+        class="record-btn {{isRecording ? 'recording' : ''}}"
+        bindtouchstart="onRecordStart"
+        bindtouchend="onRecordEnd"
+        bindtouchcancel="onRecordEnd"
+      >
+        <text class="record-btn-icon">🎤</text>
+      </view>
+      <text class="record-btn-text">按住说话</text>
+    </view>
+  </view>
+
+  <!-- 文字发动态 -->
+  <view class="text-post" wx:if="{{postType === 'text' && !showTypeSelector}}">
+    <!-- 文字输入 -->
+    <view class="text-input-section">
+      <textarea
+        class="text-post-input"
+        placeholder="今天想说什么..."
+        placeholder-style="line-height: 48rpx;"
+        maxlength="200"
+        value="{{textContent}}"
+        bindinput="onTextInput"
+        auto-focus
+      />
+      <text class="text-count">{{textContent.length || 0}}/200</text>
+    </view>
+
+    <!-- emoji贴纸预览 -->
+    <view class="emoji-stickers-preview" wx:if="{{textEmojiStickers.length > 0}}">
+      <text class="sticker" wx:for="{{textEmojiStickers}}" wx:key="keyword">
+        {{item.emoji}} {{item.keyword}}
+      </text>
+    </view>
+
+    <!-- 快捷emoji -->
+    <view class="quick-emoji-section">
+      <text class="quick-emoji-label">快捷表情</text>
+      <view class="quick-emoji-grid">
+        <view
+          class="quick-emoji-item {{textSelectedEmoji === item ? 'selected' : ''}}"
+          wx:for="{{quickEmojis}}"
+          wx:key="*this"
+          data-emoji="{{item}}"
+          bindtap="onSelectQuickEmoji"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 固定底部的发出去按钮 -->
+    <view class="fixed-submit-bar">
+      <view class="submit-btn-full {{!canSubmitText ? 'disabled' : ''}}" bindtap="onSubmit">
+        <text>发出去 ✨</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 拍照发动态 -->
+  <view class="photo-post" wx:if="{{postType === 'photo' && !showTypeSelector}}">
+    <!-- 照片预览 -->
+    <view class="photo-preview" wx:if="{{photoPath}}">
+      <image class="preview-image" src="{{photoPath}}" mode="aspectFill" />
+    </view>
+
+    <!-- 选择心情 -->
+    <view class="mood-selector">
+      <text class="mood-label">选个心情</text>
+      <view class="mood-options">
+        <view
+          class="mood-item {{moodEmoji === item ? 'selected' : ''}}"
+          wx:for="{{moodOptions}}"
+          wx:key="*this"
+          data-emoji="{{item}}"
+          bindtap="onSelectMood"
+        >
+          <text class="mood-emoji">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 文字输入 -->
+    <view class="text-input-area">
+      <textarea
+        class="photo-text-input"
+        placeholder="说点什么..."
+        placeholder-style="line-height: 44rpx;"
+        maxlength="200"
+        value="{{photoText}}"
+        bindinput="onPhotoTextInput"
+      />
+    </view>
+
+    <!-- 固定底部的发出去按钮 -->
+    <view class="fixed-submit-bar">
+      <view class="submit-btn-full {{!photoPath ? 'disabled' : ''}}" bindtap="onSubmit">
+        <text>发出去 ✨</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 画画发动态 -->
+  <view class="drawing-post" wx:if="{{postType === 'drawing' && !showTypeSelector}}">
+    <!-- 画作预览 -->
+    <view class="drawing-preview" wx:if="{{drawingPath}}">
+      <image class="drawing-preview-image" src="{{drawingPath}}" mode="aspectFit" />
+      <view class="redo-drawing" bindtap="onRedoDrawing">
+        <text>重新画</text>
+      </view>
+    </view>
+    <view class="drawing-empty" wx:else>
+      <text class="drawing-empty-icon">🎨</text>
+      <text class="drawing-empty-text">正在加载画板...</text>
+    </view>
+
+    <!-- 固定底部的发出去按钮 -->
+    <view class="fixed-submit-bar" wx:if="{{drawingPath}}">
+      <view class="submit-btn-full" bindtap="onSubmit">
+        <text>发出去 ✨</text>
+      </view>
+    </view>
+  </view>
+</view>

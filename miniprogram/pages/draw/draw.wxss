@@ -1,0 +1,152 @@
+/* pages/draw/draw.wxss - 画板页面 */
+.page-draw {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+}
+
+.draw-canvas {
+  flex: 1;
+  width: 100%;
+  background: #FFFFFF;
+}
+
+.toolbar {
+  background: #F8F8F8;
+  border-top: 1rpx solid #E0E0E0;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+}
+
+.tool-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.tool-row:last-child {
+  margin-bottom: 0;
+}
+
+.tool-label {
+  font-size: 24rpx;
+  color: #999;
+  width: 64rpx;
+  flex-shrink: 0;
+}
+
+/* 颜色选择 */
+.color-options {
+  display: flex;
+  gap: 16rpx;
+  flex: 1;
+}
+
+.color-dot {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border: 4rpx solid transparent;
+}
+
+.color-dot.active {
+  border-color: #333;
+  transform: scale(1.15);
+}
+
+.color-dot.dim {
+  opacity: 0.3;
+}
+
+.color-check {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  text-shadow: 0 1rpx 2rpx rgba(0,0,0,0.3);
+}
+
+/* 粗细选择 */
+.size-options {
+  display: flex;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.size-btn {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #E0E0E0;
+  font-size: 24rpx;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.size-btn.active {
+  background: #FF6B6B;
+  border-color: #FF6B6B;
+  color: #FFFFFF;
+}
+
+.size-btn.dim {
+  opacity: 0.3;
+}
+
+/* 操作按钮 */
+.action-row {
+  justify-content: space-between;
+}
+
+.action-btns {
+  display: flex;
+  gap: 12rpx;
+}
+
+.tool-action {
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #E0E0E0;
+  font-size: 22rpx;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.tool-action.active {
+  background: #FFF3E0;
+  border-color: #FF8C00;
+  color: #FF8C00;
+}
+
+.tool-action.danger {
+  color: #FF6B6B;
+}
+
+.tool-action.disabled {
+  opacity: 0.3;
+}
+
+.tool-action:active:not(.disabled) {
+  transform: scale(0.95);
+}
+
+/* 完成按钮 */
+.finish-btn {
+  background: #FF6B6B;
+  color: #FFFFFF;
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(255,107,107,0.3);
+}
+
+.finish-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}

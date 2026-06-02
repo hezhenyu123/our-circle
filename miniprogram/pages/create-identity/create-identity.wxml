@@ -1,0 +1,98 @@
+<!-- pages/create-identity/create-identity.wxml - 创建新身份 -->
+<view class="page-create">
+  <!-- 隐藏的裁剪 canvas -->
+  <canvas type="2d" id="avatarCanvas" style="position:fixed;left:-9999px;width:200px;height:200px;"></canvas>
+
+  <!-- 预览 -->
+  <view class="preview-card">
+    <view class="preview-avatar" style="background: {{color}}20;">
+      <image wx:if="{{avatarType === 'image' && avatarImageUrl}}" class="preview-avatar-img" src="{{avatarImageUrl}}" mode="aspectFill" />
+      <text wx:else class="preview-avatar-emoji">{{avatar || '🐰'}}</text>
+    </view>
+    <text class="preview-name">{{nickname || '新朋友'}}</text>
+    <text class="preview-grade" wx:if="{{nickname}}">{{grade}}年级</text>
+  </view>
+
+  <!-- 昵称 -->
+  <view class="form-section">
+    <text class="form-label">昵称</text>
+    <input
+      class="form-input"
+      placeholder="给孩子起个名字"
+      maxlength="8"
+      value="{{nickname}}"
+      bindinput="onNicknameInput"
+    />
+  </view>
+
+  <!-- 头像 -->
+  <view class="form-section">
+    <text class="form-label">选个头像</text>
+    <!-- 自定义头像按钮 -->
+    <view class="avatar-grid">
+      <view
+        class="avatar-option custom-avatar {{avatarType === 'image' ? 'selected' : ''}}"
+        bindtap="onChooseCustomAvatar"
+      >
+        <image wx:if="{{avatarType === 'image' && avatarImageUrl}}" class="custom-avatar-img" src="{{avatarImageUrl}}" mode="aspectFill" />
+        <view wx:else class="custom-avatar-placeholder">
+          <text class="custom-avatar-icon">📷</text>
+          <text class="custom-avatar-text">自定义</text>
+        </view>
+      </view>
+      <!-- emoji 选项 -->
+      <view
+        class="avatar-option {{avatarType === 'emoji' && avatar === item ? 'selected' : ''}}"
+        wx:for="{{avatarOptions}}"
+        wx:key="*this"
+        data-avatar="{{item}}"
+        bindtap="onSelectAvatar"
+      >
+        <text class="avatar-emoji">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 年级 -->
+  <view class="form-section">
+    <text class="form-label">年级</text>
+    <view class="grade-options">
+      <view
+        class="grade-btn {{grade === item ? 'selected' : ''}}"
+        wx:for="{{gradeOptions}}"
+        wx:key="*this"
+        data-grade="{{item}}"
+        bindtap="onSelectGrade"
+      >
+        <text>{{item}}年级</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 颜色 -->
+  <view class="form-section">
+    <text class="form-label">主题色</text>
+    <view class="color-options">
+      <view
+        class="color-option {{color === item.color ? 'selected' : ''}}"
+        wx:for="{{colorOptions}}"
+        wx:key="color"
+        data-color="{{item.color}}"
+        bindtap="onSelectColor"
+      >
+        <view class="color-circle" style="background: {{item.color}};"></view>
+        <text class="color-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-area">
+    <view class="submit-btn {{canSubmit ? '' : 'disabled'}}" bindtap="onSubmit">
+      <text>{{mode === 'edit' ? '保存修改 ✨' : '创建身份 ✨'}}</text>
+    </view>
+    <view class="delete-btn" wx:if="{{mode === 'edit'}}" bindtap="onDelete">
+      <text>删除此身份</text>
+    </view>
+  </view>
+</view>

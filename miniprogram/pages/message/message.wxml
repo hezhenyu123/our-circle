@@ -1,0 +1,40 @@
+<!-- pages/message/message.wxml - 消息通知 -->
+<view class="page-message">
+  <!-- 无身份提示 -->
+  <view class="empty-tip" wx:if="{{!currentChild}}">
+    <text class="empty-icon">👶</text>
+    <text class="empty-text">请先创建身份</text>
+    <text class="empty-sub" bindtap="onGoCreate" style="color: #FF6B6B;">点击创建 →</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-tip" wx:elif="{{notifications.length === 0}}">
+    <text class="empty-icon">🔔</text>
+    <text class="empty-text">还没有消息</text>
+    <text class="empty-sub">有人点赞或评论时会在这里提醒你</text>
+  </view>
+
+  <!-- 消息列表 -->
+  <view class="notification-list">
+    <view
+      class="notification-item card {{item.read ? '' : 'unread'}}"
+      wx:for="{{notifications}}"
+      wx:key="_id"
+      data-id="{{item.post_id}}"
+      bindtap="onTapNotification"
+    >
+      <view class="notif-avatar" style="background: {{item.fromChild.color}}20;">
+        <image wx:if="{{item.fromChild.avatarType === 'image' && item.fromChild.avatarImageUrl}}" class="notif-avatar-img" src="{{item.fromChild.avatarImageUrl}}" mode="aspectFill" />
+        <text wx:else>{{item.fromChild.avatar}}</text>
+      </view>
+      <view class="notif-content">
+        <text class="notif-name">{{item.fromChild.nickname}}</text>
+        <text class="notif-desc">{{item.desc}}</text>
+      </view>
+      <view class="notif-right">
+        <view class="unread-dot" wx:if="{{!item.read}}"></view>
+        <text class="notif-time">{{item.timeText}}</text>
+      </view>
+    </view>
+  </view>
+</view>

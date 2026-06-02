@@ -1,0 +1,125 @@
+<!-- pages/mine/mine.wxml - 个人主页 -->
+<view class="page-mine">
+  <!-- 个人信息 -->
+  <view class="profile-header">
+    <view class="profile-avatar" style="background: {{currentChild.color}}20;">
+      <image wx:if="{{currentChild.avatarType === 'image' && currentChild.avatarImageUrl}}" class="profile-avatar-img" src="{{currentChild.avatarImageUrl}}" mode="aspectFill" />
+      <text wx:else class="avatar-emoji">{{currentChild.avatar}}</text>
+    </view>
+    <text class="profile-name">{{currentChild.nickname}}</text>
+    <text class="profile-grade">{{currentChild.grade}}年级</text>
+  </view>
+
+  <!-- 统计 -->
+  <view class="profile-stats">
+    <view class="stat-item">
+      <text class="stat-num">{{postCount}}</text>
+      <text class="stat-label">动态</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">{{totalLikes}}</text>
+      <text class="stat-label">获赞</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">{{unlockedCount}}</text>
+      <text class="stat-label">成就</text>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="profile-actions">
+    <view class="action-row" bindtap="onSwitchIdentity">
+      <text class="action-label">切换身份</text>
+      <text class="action-arrow">›</text>
+    </view>
+    <view class="action-row" bindtap="onCreateIdentity">
+      <text class="action-label">创建新身份</text>
+      <text class="action-arrow">›</text>
+    </view>
+    <view class="action-row action-danger" bindtap="onResetData">
+      <text class="action-label">重置数据</text>
+      <text class="action-hint">需要家长验证</text>
+    </view>
+  </view>
+
+  <!-- 成就墙 -->
+  <view class="section-title">
+    <text>我的成就</text>
+    <text class="section-sub">{{unlockedCount}}/{{totalAchievements}}</text>
+  </view>
+
+  <view class="achievement-wall">
+    <view
+      class="achievement-item {{item.unlocked ? 'unlocked' : 'locked'}}"
+      wx:for="{{showAllAchievements ? achievements : achievements}}"
+      wx:key="id"
+    >
+      <view class="achievement-emoji">{{item.unlocked ? item.emoji : '🔒'}}</view>
+      <text class="achievement-name">{{item.unlocked ? item.name : '? ? ?'}}</text>
+      <text class="achievement-desc" wx:if="{{item.unlocked}}">{{item.desc}}</text>
+      <view class="achievement-progress" wx:if="{{!item.unlocked}}">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{item.progress / item.target * 100}}%;"></view>
+        </view>
+        <text class="progress-text">{{item.progress}}/{{item.target}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的动态 -->
+  <view class="section-title">
+    <text>我的动态</text>
+    <text class="section-sub">{{postCount}}条</text>
+  </view>
+
+  <view class="my-posts">
+    <view class="empty-state" wx:if="{{myPosts.length === 0}}">
+      <text class="empty-emoji">📝</text>
+      <text class="empty-title">还没有动态</text>
+      <text class="empty-desc">快去圈子发第一条吧！</text>
+    </view>
+
+    <view
+      class="my-post-item card"
+      wx:for="{{myPosts}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onTapPost"
+      bindlongpress="onLongPressPost"
+    >
+      <!-- 动态内容摘要 -->
+      <view class="post-summary">
+        <text class="summary-type">{{item.type === 'voice' ? '🎤' : item.type === 'photo' ? '📸' : item.type === 'text' ? '✏️' : '🎨'}}</text>
+        <text class="summary-text" wx:if="{{item.type === 'voice'}}">语音动态 {{item.content.voice_duration}}"</text>
+        <text class="summary-text" wx:elif="{{item.content.text}}">{{item.content.text}}</text>
+        <text class="summary-text" wx:else>{{item.type === 'photo' ? '拍照动态' : item.type === 'drawing' ? '画画动态' : '文字动态'}}</text>
+      </view>
+      <view class="post-meta">
+        <text class="meta-time">{{item.timeText}}</text>
+        <text class="meta-stats">❤️{{item.likes.length}} 💬{{item.commentCount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 家长验证码弹窗 -->
+  <view class="parent-modal-mask" wx:if="{{showParentModal}}" bindtap="onCancelParentCode">
+    <view class="parent-modal" catchtap>
+      <text class="parent-modal-title">🔐 家长验证</text>
+      <text class="parent-modal-desc">请输入4位家长验证码</text>
+      <input
+        class="parent-code-input"
+        type="number"
+        maxlength="4"
+        placeholder="请输入验证码"
+        value="{{parentCode}}"
+        bindinput="onParentCodeInput"
+        focus="{{showParentModal}}"
+      />
+      <text class="parent-code-error" wx:if="{{parentCodeError}}">{{parentCodeError}}</text>
+      <view class="parent-modal-btns">
+        <view class="parent-modal-btn btn-cancel" bindtap="onCancelParentCode">取消</view>
+        <view class="parent-modal-btn btn-confirm" bindtap="onConfirmParentCode">确认</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,174 @@
+<!-- pages/detail/detail.wxml - 动态详情 -->
+<view class="page-detail">
+  <!-- 动态内容 -->
+  <view class="detail-card" wx:if="{{post}}">
+    <!-- 作者信息 -->
+    <view class="detail-header">
+      <view class="author-row">
+        <view class="avatar" style="background: {{childInfo.color}}20;">
+          <image wx:if="{{childInfo.avatarType === 'image' && childInfo.avatarImageUrl}}" class="avatar-img" src="{{childInfo.avatarImageUrl}}" mode="aspectFill" />
+          <text wx:else>{{childInfo.avatar}}</text>
+        </view>
+        <view class="author-info">
+          <text class="author-name">{{childInfo.nickname}}</text>
+          <text class="post-time">{{timeText}}</text>
+        </view>
+        <view class="delete-btn" wx:if="{{post.child_id === currentChild._id}}" bindtap="onDeletePost">
+          <text class="delete-icon">🗑️</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 动态正文 -->
+    <view class="detail-content">
+      <!-- 语音动态 -->
+      <block wx:if="{{post.type === 'voice'}}">
+        <view class="voice-bubble {{isPlayingVoice ? 'playing' : ''}}" style="width: {{voiceBubbleWidth}}rpx;" bindtap="onTapVoice" data-url="{{post.content.voice_url}}">
+          <text class="voice-icon">🎤</text>
+          <view class="voice-bars">
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+            <view class="vbar"></view>
+          </view>
+          <text class="voice-duration">{{post.content.voice_duration}}"</text>
+        </view>
+      </block>
+
+      <!-- 拍照动态 -->
+      <block wx:if="{{post.type === 'photo'}}">
+        <image class="detail-image" src="{{post.content.image_url}}" mode="aspectFill" />
+        <view class="photo-caption" wx:if="{{post.content.mood_emoji || post.content.text}}">
+          <text class="mood" wx:if="{{post.content.mood_emoji}}">{{post.content.mood_emoji}}</text>
+          <text class="caption-text" wx:if="{{post.content.text}}">{{post.content.text}}</text>
+        </view>
+      </block>
+
+      <!-- 文字动态 -->
+      <block wx:if="{{post.type === 'text'}}">
+        <view class="text-body">{{post.content.text}}</view>
+        <view class="text-mood" wx:if="{{post.content.mood_emoji}}">
+          <text class="mood-emoji-lg">{{post.content.mood_emoji}}</text>
+        </view>
+        <view class="emoji-stickers" wx:if="{{post.emojiStickers.length > 0}}">
+          <text class="sticker" wx:for="{{post.emojiStickers}}" wx:key="keyword">
+            {{item.emoji}} {{item.keyword}}
+          </text>
+        </view>
+      </block>
+
+      <!-- 画画动态 -->
+      <block wx:if="{{post.type === 'drawing'}}">
+        <image class="detail-image drawing" src="{{post.content.image_url}}" mode="aspectFit" />
+      </block>
+    </view>
+
+    <!-- 互动栏 -->
+    <view class="detail-actions">
+      <view class="action-btn {{isLiked ? 'liked' : ''}}" bindtap="onTapLike">
+        <text class="action-icon">{{isLiked ? '❤️' : '🤍'}}</text>
+        <text class="action-count">{{post.likes.length}}</text>
+      </view>
+      <view class="action-btn" bindtap="onTapComment">
+        <text class="action-icon">💬</text>
+        <text class="action-count">{{commentCount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comment-section">
+    <view class="comment-header">
+      <text class="comment-title">评论 ({{commentCount}})</text>
+    </view>
+
+    <view class="empty-comments" wx:if="{{comments.length === 0}}">
+      <text class="empty-icon">💬</text>
+      <text class="empty-text">还没有评论，来说点什么吧</text>
+    </view>
+
+    <view class="comment-list">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+        <view class="comment-avatar" style="background: {{item.childInfo.color}}20;">
+          <image wx:if="{{item.childInfo.avatarType === 'image' && item.childInfo.avatarImageUrl}}" class="comment-avatar-img" src="{{item.childInfo.avatarImageUrl}}" mode="aspectFill" />
+          <text wx:else>{{item.childInfo.avatar}}</text>
+        </view>
+        <view class="comment-body">
+          <text class="comment-name">{{item.childInfo.nickname}}</text>
+          <view class="comment-content">
+            <text class="comment-emoji" wx:if="{{item.content.emoji}}">{{item.content.emoji}}</text>
+            <text class="comment-text" wx:if="{{item.content.text}}">{{item.content.text}}</text>
+          </view>
+          <text class="comment-time">{{item.timeText}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部评论入口 -->
+  <view class="comment-bar">
+    <view class="comment-input-fake" bindtap="onTapComment">
+      <text class="placeholder">说点什么...</text>
+    </view>
+  </view>
+
+  <!-- 评论输入面板 -->
+  <view class="comment-panel-mask {{showCommentInput ? 'show' : ''}}" bindtap="onCloseCommentInput"></view>
+  <view class="comment-panel {{showCommentInput ? 'show' : ''}}">
+    <view class="comment-panel-header">
+      <text class="panel-title">发表评论</text>
+      <view class="panel-submit {{!canSubmitComment ? 'disabled' : ''}}" bindtap="onSubmitComment">
+        <text>发送</text>
+      </view>
+    </view>
+
+    <!-- emoji选择 -->
+    <view class="emoji-picker">
+      <view
+        class="emoji-option {{selectedEmoji === item ? 'selected' : ''}}"
+        wx:for="{{emojiOptions}}"
+        wx:key="*this"
+        data-emoji="{{item}}"
+        bindtap="onSelectEmoji"
+      >
+        <text>{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 文字输入 -->
+    <view class="comment-text-input-wrap">
+      <textarea
+        class="comment-textarea"
+        placeholder="说点什么..."
+        placeholder-style="line-height: 44rpx;"
+        maxlength="100"
+        value="{{commentText}}"
+        bindinput="onCommentTextInput"
+        auto-focus="{{showCommentInput}}"
+      />
+    </view>
+  </view>
+
+  <!-- 家长验证码弹窗 -->
+  <view class="parent-modal-mask" wx:if="{{showParentModal}}" bindtap="onCancelParentCode">
+    <view class="parent-modal" catchtap>
+      <text class="parent-modal-title">🔐 家长验证</text>
+      <text class="parent-modal-desc">请输入4位家长验证码</text>
+      <input
+        class="parent-code-input"
+        type="number"
+        maxlength="4"
+        placeholder="请输入验证码"
+        value="{{parentCode}}"
+        bindinput="onParentCodeInput"
+        focus="{{showParentModal}}"
+      />
+      <text class="parent-code-error" wx:if="{{parentCodeError}}">{{parentCodeError}}</text>
+      <view class="parent-modal-btns">
+        <view class="parent-modal-btn btn-cancel" bindtap="onCancelParentCode">取消</view>
+        <view class="parent-modal-btn btn-confirm" bindtap="onConfirmParentCode">确认</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,94 @@
+/* pages/message/message.wxss */
+.page-message {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 20rpx 24rpx;
+}
+
+.empty-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.empty-sub {
+  font-size: 24rpx;
+  color: #CCC;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.notification-item.unread {
+  background: #FFFAFA;
+}
+
+.notif-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.notif-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.notif-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.notif-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.notif-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+}
+
+.unread-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #FF6B6B;
+}
+
+.notif-time {
+  font-size: 22rpx;
+  color: #CCC;
+}

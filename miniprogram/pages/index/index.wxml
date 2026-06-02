@@ -1,0 +1,230 @@
+<!-- pages/index/index.wxml - 圈子首页 -->
+<view class="page-index">
+  <!-- 无身份引导页 -->
+  <view class="no-identity" wx:if="{{noIdentity}}">
+    <text class="no-identity-emoji">👶</text>
+    <text class="no-identity-title">欢迎来到我们的圈子</text>
+    <text class="no-identity-desc">先创建一个身份，就可以开始发动态啦！</text>
+    <view class="no-identity-btn" bindtap="onGoCreateIdentity">
+      <text class="no-identity-btn-text">创建身份</text>
+    </view>
+  </view>
+
+  <!-- 正常内容区（有身份时显示） -->
+  <block wx:if="{{!noIdentity}}">
+  <!-- 顶部：当前账户 + 切换入口 -->
+  <view class="header">
+    <view class="header-left" bindtap="onTapAccount">
+      <view class="avatar" style="background: {{currentChild.color}}20;">
+        <image wx:if="{{currentChild.avatarType === 'image' && currentChild.avatarImageUrl}}" class="avatar-img" src="{{currentChild.avatarImageUrl}}" mode="aspectFill" />
+        <text wx:else>{{currentChild.avatar}}</text>
+      </view>
+      <text class="nickname">{{currentChild.nickname}}</text>
+      <text class="grade-tag">{{currentChild.grade}}年级</text>
+    </view>
+    <view class="header-right">
+      <view class="parent-mode-btn {{parentMode ? 'active' : ''}}" bindtap="onToggleParentMode">
+        <text class="parent-mode-icon">👁</text>
+        <text class="parent-mode-text" wx:if="{{parentMode}}">家长</text>
+      </view>
+      <view class="switch-btn" bindtap="onTapAccount">
+        <text class="switch-text">切换</text>
+        <text class="switch-icon">▼</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 家长模式横幅 -->
+  <view class="parent-mode-banner" wx:if="{{parentMode}}">
+    <text class="banner-icon">👁‍🗨</text>
+    <text class="banner-text">家长旁观模式 — 只看不发</text>
+    <text class="banner-close" bindtap="onToggleParentMode">✕</text>
+  </view>
+
+  <!-- 账户切换面板 -->
+  <view class="account-switcher {{showAccountSwitcher ? 'show' : ''}}" wx:if="{{showAccountSwitcher}}">
+    <view class="switcher-mask" bindtap="onCloseSwitcher"></view>
+    <view class="switcher-panel">
+      <view class="switcher-title">选择身份</view>
+      <view class="switcher-list">
+        <view
+          class="switcher-item {{item._id === currentChild._id ? 'active' : ''}}"
+          wx:for="{{children}}"
+          wx:key="_id"
+        >
+          <view
+            class="switcher-tap-area"
+            data-id="{{item._id}}"
+            bindtap="onSelectChild"
+          >
+            <view class="avatar" style="background: {{item.color}}20;">
+              <image wx:if="{{item.avatarType === 'image' && item.avatarImageUrl}}" class="avatar-img" src="{{item.avatarImageUrl}}" mode="aspectFill" />
+              <text wx:else>{{item.avatar}}</text>
+            </view>
+            <text class="switcher-name">{{item.nickname}}</text>
+            <text class="switcher-grade">{{item.grade}}年级</text>
+            <text class="switcher-check" wx:if="{{item._id === currentChild._id}}">✓</text>
+          </view>
+          <view class="switcher-edit" data-id="{{item._id}}" catchtap="onEditIdentity">
+            <text>编辑</text>
+          </view>
+        </view>
+      </view>
+      <!-- 新建身份 -->
+      <view class="switcher-add" bindtap="onCreateIdentity">
+        <text class="switcher-add-icon">＋</text>
+        <text class="switcher-add-text">创建新身份</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 动态流 -->
+  <scroll-view class="post-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="empty-state" wx:if="{{posts.length === 0}}">
+      <text class="empty-emoji">🌈</text>
+      <text class="empty-title">还没有动态</text>
+      <text class="empty-desc">快点击右下角 ＋ 发第一条吧！</text>
+    </view>
+
+    <view
+      class="post-card card {{item.isOwn ? 'own-post' : ''}}"
+      wx:for="{{posts}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onTapPost"
+      bindlongpress="onLongPressPost"
+    >
+      <!-- 动态头部：头像+昵称+时间 -->
+      <view class="post-header flex-between">
+        <view class="post-author flex-row">
+          <view class="avatar" style="background: {{item.childInfo.color}}20;">
+            <image wx:if="{{item.childInfo.avatarType === 'image' && item.childInfo.avatarImageUrl}}" class="avatar-img" src="{{item.childInfo.avatarImageUrl}}" mode="aspectFill" />
+            <text wx:else>{{item.childInfo.avatar}}</text>
+          </view>
+          <view class="author-info">
+            <text class="author-name">{{item.childInfo.nickname}}</text>
+            <text class="post-time">{{item.timeText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 动态内容 -->
+      <view class="post-content">
+        <!-- 语音动态 -->
+        <block wx:if="{{item.type === 'voice'}}">
+          <view class="voice-bubble {{item.isPlaying ? 'playing' : ''}}" style="width: {{item.voiceBubbleWidth}}rpx;" data-url="{{item.content.voice_url}}" data-id="{{item._id}}" catchtap="onTapVoice">
+            <text class="voice-icon">🎤</text>
+            <view class="voice-bars">
+              <view class="vbar"></view>
+              <view class="vbar"></view>
+              <view class="vbar"></view>
+              <view class="vbar"></view>
+              <view class="vbar"></view>
+            </view>
+            <text class="voice-duration">{{item.content.voice_duration}}"</text>
+          </view>
+        </block>
+
+        <!-- 拍照动态 -->
+        <block wx:if="{{item.type === 'photo'}}">
+          <image class="post-image" src="{{item.content.image_url}}" mode="aspectFill" />
+          <view class="photo-text" wx:if="{{item.content.mood_emoji}}">
+            <text class="mood-emoji">{{item.content.mood_emoji}}</text>
+            <text wx:if="{{item.content.text}}">{{item.content.text}}</text>
+          </view>
+        </block>
+
+        <!-- 画画动态 -->
+        <block wx:if="{{item.type === 'drawing'}}">
+          <image class="post-image drawing" src="{{item.content.image_url}}" mode="aspectFit" />
+        </block>
+
+        <!-- 文字动态 -->
+        <block wx:if="{{item.type === 'text'}}">
+          <view class="text-content">
+            <text class="text-body">{{item.content.text}}</text>
+            <view class="text-mood" wx:if="{{item.content.mood_emoji}}">
+              <text class="mood-emoji">{{item.content.mood_emoji}}</text>
+            </view>
+          </view>
+          <view class="emoji-stickers flex-row" wx:if="{{item.emojiStickers && item.emojiStickers.length > 0}}">
+            <text class="sticker" wx:for="{{item.emojiStickers}}" wx:for-item="sticker" wx:key="keyword">
+              {{sticker.emoji}}
+            </text>
+          </view>
+        </block>
+      </view>
+
+      <!-- 互动栏 -->
+      <view class="post-actions flex-row">
+        <view
+          class="action-btn {{item.isLiked ? 'liked' : ''}} {{item.likeAnim ? 'like-anim' : ''}}"
+          data-id="{{item._id}}"
+          catchtap="onTapLike"
+        >
+          <text class="action-icon">{{item.isLiked ? '❤️' : '🤍'}}</text>
+          <text class="action-count">{{item.likes.length || ''}}</text>
+        </view>
+        <view class="action-btn" data-id="{{item._id}}" catchtap="onTapComment">
+          <text class="action-icon">💬</text>
+          <text class="action-count">{{item.commentCount || ''}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部间距 -->
+    <view class="list-bottom" wx:if="{{posts.length > 0}}">
+      <view class="bottom-line"></view>
+      <text class="bottom-text">到底啦</text>
+      <view class="bottom-line"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 快速emoji回应条 -->
+  <view class="quick-react-bar {{showQuickReact ? 'show' : ''}}" wx:if="{{showQuickReact}}">
+    <view class="quick-react-mask" bindtap="onCloseQuickReact"></view>
+    <view class="quick-react-panel">
+      <text class="quick-react-hint">快速回应</text>
+      <view class="quick-react-options">
+        <view
+          class="quick-react-item"
+          wx:for="{{quickReactEmojis}}"
+          wx:key="*this"
+          data-emoji="{{item}}"
+          bindtap="onQuickReact"
+        >
+          <text class="quick-react-emoji">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发动态浮球 -->
+  <view class="fab-btn" bindtap="onTapCreate" wx:if="{{!parentMode}}">
+    <text class="fab-icon">＋</text>
+  </view>
+  </block>
+  <!-- /正常内容区 -->
+
+  <!-- 家长验证码弹窗 -->
+  <view class="parent-modal-mask" wx:if="{{showParentModal}}" bindtap="onCancelParentCode">
+    <view class="parent-modal" catchtap>
+      <text class="parent-modal-title">🔐 家长验证</text>
+      <text class="parent-modal-desc">请输入4位家长验证码</text>
+      <input
+        class="parent-code-input"
+        type="number"
+        maxlength="4"
+        placeholder="请输入验证码"
+        value="{{parentCode}}"
+        bindinput="onParentCodeInput"
+        focus="{{showParentModal}}"
+      />
+      <text class="parent-code-error" wx:if="{{parentCodeError}}">{{parentCodeError}}</text>
+      <view class="parent-modal-btns">
+        <view class="parent-modal-btn btn-cancel" bindtap="onCancelParentCode">取消</view>
+        <view class="parent-modal-btn btn-confirm" bindtap="onConfirmParentCode">确认</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,532 @@
+/* pages/detail/detail.wxss */
+.page-detail {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 120rpx;
+}
+
+/* 动态卡片 */
+.detail-card {
+  background: #FFFFFF;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.detail-header {
+  margin-bottom: 20rpx;
+}
+
+.author-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.delete-btn {
+  margin-left: auto;
+  padding: 12rpx;
+  opacity: 0.5;
+}
+
+.delete-btn:active {
+  opacity: 1;
+}
+
+.delete-icon {
+  font-size: 28rpx;
+}
+
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.author-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.post-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 动态内容 */
+.detail-content {
+  margin-bottom: 20rpx;
+}
+
+.voice-bubble {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: #95EC69;
+  padding: 20rpx 24rpx;
+  border-radius: 20rpx;
+  min-width: 160rpx;
+  transition: background 0.2s;
+}
+
+.voice-icon {
+  font-size: 32rpx;
+}
+
+.voice-bars {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  flex: 1;
+}
+
+.vbar {
+  width: 6rpx;
+  border-radius: 3rpx;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.vbar:nth-child(1) { height: 10rpx; }
+.vbar:nth-child(2) { height: 22rpx; }
+.vbar:nth-child(3) { height: 30rpx; }
+.vbar:nth-child(4) { height: 18rpx; }
+.vbar:nth-child(5) { height: 12rpx; }
+
+.voice-duration {
+  font-size: 24rpx;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* 语音播放动画 */
+.voice-bubble.playing {
+  background: #8BE55A;
+}
+
+.voice-bubble.playing .vbar {
+  animation: voiceWave 0.8s ease-in-out infinite;
+}
+
+.voice-bubble.playing .vbar:nth-child(1) { animation-delay: 0s; }
+.voice-bubble.playing .vbar:nth-child(2) { animation-delay: 0.1s; }
+.voice-bubble.playing .vbar:nth-child(3) { animation-delay: 0.2s; }
+.voice-bubble.playing .vbar:nth-child(4) { animation-delay: 0.3s; }
+.voice-bubble.playing .vbar:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes voiceWave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(2.2); }
+}
+
+.emoji-stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.sticker {
+  font-size: 28rpx;
+  background: #FFF8E1;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.detail-image {
+  width: 90%;
+  height: 500rpx;
+  border-radius: 16rpx;
+  margin: 0 auto;
+  display: block;
+}
+
+.detail-image.drawing {
+  width: 70%;
+  height: 400rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #E8E8E8;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+
+.photo-caption {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
+.mood {
+  font-size: 36rpx;
+}
+
+.caption-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.text-body {
+  font-size: 34rpx;
+  color: #333;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.text-mood {
+  margin-top: 16rpx;
+}
+
+.mood-emoji-lg {
+  font-size: 48rpx;
+}
+
+/* 互动栏 */
+.detail-actions {
+  display: flex;
+  gap: 40rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.action-icon {
+  font-size: 32rpx;
+}
+
+.action-count {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.action-btn.liked .action-count {
+  color: #FF6B6B;
+}
+
+/* 评论区 */
+.comment-section {
+  background: #FFFFFF;
+  padding: 24rpx;
+}
+
+.comment-header {
+  margin-bottom: 20rpx;
+}
+
+.comment-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.empty-comments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+}
+
+.empty-icon {
+  font-size: 60rpx;
+  margin-bottom: 12rpx;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16rpx;
+}
+
+.comment-avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.comment-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.comment-body {
+  flex: 1;
+}
+
+.comment-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #666;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.comment-content {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.comment-emoji {
+  font-size: 36rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.comment-time {
+  font-size: 20rpx;
+  color: #CCC;
+  margin-top: 4rpx;
+  display: block;
+}
+
+/* 底部评论栏 */
+.comment-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  border-top: 1rpx solid #F0F0F0;
+  z-index: 50;
+}
+
+.comment-input-fake {
+  background: #F5F5F5;
+  border-radius: 32rpx;
+  padding: 16rpx 24rpx;
+}
+
+.placeholder {
+  font-size: 28rpx;
+  color: #CCC;
+}
+
+/* 评论面板 */
+.comment-panel-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.comment-panel-mask.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.comment-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  z-index: 101;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.comment-panel.show {
+  transform: translateY(0);
+}
+
+.comment-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.panel-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.panel-submit {
+  background: #FF6B6B;
+  color: #FFFFFF;
+  padding: 10rpx 32rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+}
+
+.panel-submit.disabled {
+  background: #CCC;
+}
+
+/* emoji选择器 */
+.emoji-picker {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+  flex-wrap: wrap;
+}
+
+.emoji-option {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  font-size: 36rpx;
+  border: 3rpx solid transparent;
+}
+
+.emoji-option.selected {
+  border-color: #FF6B6B;
+  background: #FFF0F0;
+}
+
+/* 文字输入 */
+.comment-text-input-wrap {
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  padding: 16rpx;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 100rpx;
+  font-size: 28rpx;
+  line-height: 44rpx;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+/* 家长验证码弹窗 */
+.parent-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.parent-modal {
+  width: 560rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.parent-modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.parent-modal-desc {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 32rpx;
+}
+
+.parent-code-input {
+  width: 100%;
+  height: 80rpx;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 36rpx;
+  letter-spacing: 16rpx;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.parent-code-error {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  margin-bottom: 12rpx;
+  height: 32rpx;
+}
+
+.parent-modal-btns {
+  display: flex;
+  gap: 24rpx;
+  width: 100%;
+  margin-top: 16rpx;
+}
+
+.parent-modal-btn {
+  flex: 1;
+  height: 76rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.btn-cancel {
+  background: #F5F5F5;
+  color: #999;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+}
+
+.btn-cancel:active {
+  background: #E8E8E8;
+}
+
+.btn-confirm:active {
+  opacity: 0.85;
+}
