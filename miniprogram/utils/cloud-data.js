@@ -182,15 +182,13 @@ async function addPost(post) {
  * 删除动态
  */
 async function deletePost(postId) {
-  await getDb().collection('posts').doc(postId).remove()
-  // 同时删除相关评论和通知
-  const comments = await getDb().collection('comments').where({ post_id: postId }).get()
-  for (const c of comments.data) {
-    await getDb().collection('comments').doc(c._id).remove()
-  }
-  const notifs = await getDb().collection('notifications').where({ post_id: postId }).get()
-  for (const n of notifs.data) {
-    await getDb().collection('notifications').doc(n._id).remove()
+  const result = await wx.cloud.callFunction({
+    name: 'delete-post',
+    data: { postId }
+  })
+  const cloudResult = result && result.result ? result.result : null
+  if (!cloudResult || cloudResult.code !== 0) {
+    throw new Error(cloudResult && cloudResult.message ? cloudResult.message : '删除动态失败')
   }
 }
 
