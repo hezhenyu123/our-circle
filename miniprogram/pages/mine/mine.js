@@ -47,7 +47,7 @@ Page({
     if (!currentChild) return
 
     try {
-      const allPosts = await cloudData.getPosts()
+      const allPosts = await cloudData.getPosts(0, 100)
       // 缓存供成就系统使用
       wx.setStorageSync('postsCache', allPosts)
 
@@ -234,7 +234,7 @@ Page({
 
               if (cloudResultCode !== 0 && cloudResultCode !== '0') {
                 const [posts, children] = await Promise.all([
-                  cloudData.getPosts(),
+                  cloudData.getPosts(0, 100),
                   cloudData.syncChildren()
                 ])
 

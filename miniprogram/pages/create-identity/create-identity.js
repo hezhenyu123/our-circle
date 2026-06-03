@@ -193,21 +193,46 @@ Page({
 
     wx.showModal({
       title: '删除身份',
-      content: `确定要删除「${this.data.nickname}」吗？相关动态不会被删除。`,
+      content: `确定要删除「${this.data.nickname}」吗？所有相关动态、评论和文件都会被删除。`,
       confirmColor: '#FF6B6B',
       success: async (res) => {
         if (res.confirm) {
           try {
-            // 清理自定义头像文件
-            const child = children.find(c => c._id === this.data.editChildId)
-            if (child && child.avatarImageUrl) {
-              try { wx.getFileSystemManager().unlinkSync(child.avatarImageUrl) } catch (e) {}
+            const result = await wx.cloud.callFunction({
+              name: 'delete-identity',
+              data: { childId: this.data.editChildId }
+            })
+            const cloudResult = result && result.result ? result.result : null
+            if (!cloudResult || cloudResult.code !== 0) {
+              throw new Error(cloudResult && cloudResult.message ? cloudResult.message : '云函数执行失败')
             }
-            await cloudData.deleteChild(this.data.editChildId)
+
+            let children = wx.getStorageSync('childrenCache') || []
+            const child = children.find(c => c._id === this.data.editChildId)
+            children = children.filter(c => c._id !== this.data.editChildId)
+            wx.setStorageSync('childrenCache', children)
+
+            const currentChildId = wx.getStorageSync('currentChildId')
+            if (currentChildId === this.data.editChildId) {
+              if (children.length > 0) {
+                wx.setStorageSync('currentChildId', children[0]._id)
+              } else {
+                wx.removeStorageSync('currentChildId')
+              }
+            }
+
+            wx.removeStorageSync('postsCache')
+            wx.removeStorageSync('commentsCache')
+
             wx.showToast({ title: '已删除', icon: 'success' })
             setTimeout(() => { wx.navigateBack() }, 1000)
           } catch (e) {
-            wx.showToast({ title: '删除失败', icon: 'none' })
+            console.error('删除身份失败', e)
+            wx.showModal({
+              title: '删除失败',
+              content: (e && e.message) ? e.message : '请查看控制台日志',
+              showCancel: false
+            })
           }
         }
       }

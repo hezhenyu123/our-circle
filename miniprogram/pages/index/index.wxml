@@ -79,7 +79,7 @@
   </view>
 
   <!-- 动态流 -->
-  <scroll-view class="post-list" scroll-y enhanced show-scrollbar="{{false}}">
+  <scroll-view class="post-list" scroll-y enhanced show-scrollbar="{{false}}" bindscrolltolower="loadMore">
     <view class="empty-state" wx:if="{{posts.length === 0}}">
       <text class="empty-emoji">🌈</text>
       <text class="empty-title">还没有动态</text>
@@ -175,9 +175,14 @@
 
     <!-- 底部间距 -->
     <view class="list-bottom" wx:if="{{posts.length > 0}}">
-      <view class="bottom-line"></view>
-      <text class="bottom-text">到底啦</text>
-      <view class="bottom-line"></view>
+      <block wx:if="{{hasMore}}">
+        <text class="bottom-text">加载中...</text>
+      </block>
+      <block wx:else>
+        <view class="bottom-line"></view>
+        <text class="bottom-text">到底啦</text>
+        <view class="bottom-line"></view>
+      </block>
     </view>
   </scroll-view>
 

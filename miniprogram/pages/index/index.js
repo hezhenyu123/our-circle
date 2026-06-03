@@ -24,7 +24,9 @@ Page({
     quickReactPostId: '',
     quickReactEmojis: ['👍', '❤️', '😄', '😢', '😮', '🎉'],
     loading: true,
-    noIdentity: false
+    noIdentity: false,
+    hasMore: true,
+    pageSize: 20
   },
 
   onLoad() {
@@ -47,7 +49,7 @@ Page({
       return
     }
 
-    this.setData({ currentChild, children: cloudData.getChildren(), noIdentity: false })
+    this.setData({ currentChild, children: cloudData.getChildren(), noIdentity: false, hasMore: true })
     await this.loadPosts()
     this.updateMessageBadge()
   },
@@ -74,17 +76,17 @@ Page({
   // 加载动态列表
   async loadPosts() {
     try {
-      const posts = await cloudData.getPosts()
-      // 缓存供成就系统使用
-      wx.setStorageSync('postsCache', posts)
+      const posts = await cloudData.getPosts(0, this.data.pageSize)
 
-      // 获取文件临时链接
+      const allComments = []
       const enrichedPosts = []
       for (const post of posts) {
+        const comments = await cloudData.getComments(post._id)
+        allComments.push(...comments)
+
         let imageUrl = post.content.image_url || ''
         let voiceUrl = post.content.voice_url || ''
 
-        // 云存储文件需要获取临时链接
         if (imageUrl && imageUrl.startsWith('cloud://')) {
           imageUrl = await cloudData.getTempFileURL(imageUrl)
         }
@@ -93,7 +95,6 @@ Page({
         }
 
         const child = cloudData.getChildInfo(post.child_id) || { nickname: '未知', avatar: '❓', color: '#999', avatarType: 'emoji' }
-        const comments = await cloudData.getComments(post._id)
         const currentChild = cloudData.getCurrentChild()
         const isLiked = currentChild && (post.likes || []).includes(currentChild._id)
         const isOwn = currentChild && post.child_id === currentChild._id
@@ -116,19 +117,77 @@ Page({
         })
       }
 
-      // 缓存评论供成就系统使用
-      const allComments = []
-      for (const post of posts) {
-        const cs = await cloudData.getComments(post._id)
-        allComments.push(...cs)
-      }
+      wx.setStorageSync('postsCache', posts)
       wx.setStorageSync('commentsCache', allComments)
 
-      this.setData({ posts: enrichedPosts, loading: false })
+      this.setData({ posts: enrichedPosts, loading: false, hasMore: posts.length >= this.data.pageSize })
     } catch (e) {
       console.error('加载动态失败', e)
       this.setData({ loading: false })
       wx.showToast({ title: '加载失败，下拉刷新', icon: 'none' })
+    }
+  },
+
+  async loadMore() {
+    if (!this.data.hasMore || this.data.loading) return
+    this.setData({ loading: true })
+    try {
+      const currentCount = this.data.posts.length
+      const morePosts = await cloudData.getPosts(currentCount, this.data.pageSize)
+      if (morePosts.length === 0) {
+        this.setData({ hasMore: false, loading: false })
+        return
+      }
+
+      const allComments = wx.getStorageSync('commentsCache') || []
+      const enrichedPosts = []
+      for (const post of morePosts) {
+        const comments = await cloudData.getComments(post._id)
+        allComments.push(...comments)
+
+        let imageUrl = post.content.image_url || ''
+        let voiceUrl = post.content.voice_url || ''
+
+        if (imageUrl && imageUrl.startsWith('cloud://')) {
+          imageUrl = await cloudData.getTempFileURL(imageUrl)
+        }
+        if (voiceUrl && voiceUrl.startsWith('cloud://')) {
+          voiceUrl = await cloudData.getTempFileURL(voiceUrl)
+        }
+
+        const child = cloudData.getChildInfo(post.child_id) || { nickname: '未知', avatar: '❓', color: '#999', avatarType: 'emoji' }
+        const currentChild = cloudData.getCurrentChild()
+        const isLiked = currentChild && (post.likes || []).includes(currentChild._id)
+        const isOwn = currentChild && post.child_id === currentChild._id
+        const emojiStickers = (post.type === 'text') ? (post.content.emoji_stickers || []) : []
+        const duration = (post.type === 'voice' && post.content.voice_duration) ? post.content.voice_duration : 0
+        const voiceBubbleWidth = Math.min(480, Math.max(160, 160 + (duration / 60) * 320))
+
+        enrichedPosts.push({
+          ...post,
+          content: { ...post.content, image_url: imageUrl, voice_url: voiceUrl },
+          childInfo: child,
+          commentCount: comments.length,
+          isLiked,
+          isOwn,
+          emojiStickers,
+          voiceBubbleWidth,
+          timeText: util.formatTime(post.created_at)
+        })
+      }
+
+      const postsCache = wx.getStorageSync('postsCache') || []
+      wx.setStorageSync('postsCache', postsCache.concat(morePosts))
+      wx.setStorageSync('commentsCache', allComments)
+
+      this.setData({
+        posts: this.data.posts.concat(enrichedPosts),
+        loading: false,
+        hasMore: morePosts.length >= this.data.pageSize
+      })
+    } catch (e) {
+      console.error('加载更多失败', e)
+      this.setData({ loading: false })
     }
   },
 
@@ -254,7 +313,7 @@ Page({
       })
 
       // 获取动态作者
-      const posts = await cloudData.getPosts()
+      const posts = await cloudData.getPosts(0, 100)
       const post = posts.find(p => p._id === postId)
       if (post && post.child_id !== currentChild._id) {
         await cloudData.addNotification({

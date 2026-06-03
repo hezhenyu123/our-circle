@@ -1,8 +1,23 @@
 // utils/cloud-data.js - 云开发数据层
 // 统一封装云数据库操作，替代 localStorage
 
-const db = wx.cloud.database()
-const _ = db.command
+let _db = null
+let _cmd = null
+
+function getDb() {
+  if (!_db) {
+    _db = wx.cloud.database()
+    _cmd = _db.command
+  }
+  return _db
+}
+
+function getCmd() {
+  if (!_cmd) {
+    getDb()
+  }
+  return _cmd
+}
 
 // ============ 身份管理 ============
 
@@ -28,7 +43,7 @@ function getChildren() {
  * 从云端同步孩子列表到本地缓存
  */
 async function syncChildren() {
-  const { data } = await db.collection('children').orderBy('createdAt', 'asc').get()
+  const { data } = await getDb().collection('children').orderBy('createdAt', 'asc').get()
   wx.setStorageSync('childrenCache', data)
   return data
 }
@@ -51,10 +66,10 @@ async function createChild(childData) {
     avatarImageUrl: childData.avatarImageUrl || '',
     grade: childData.grade,
     color: childData.color,
-    createdAt: db.serverDate()
+    createdAt: getDb().serverDate()
   }
 
-  const { _id } = await db.collection('children').add({ data: newChild })
+  const { _id } = await getDb().collection('children').add({ data: newChild })
   newChild._id = _id
 
   // 更新本地缓存
@@ -76,10 +91,10 @@ async function updateChild(childId, data) {
     avatarImageUrl: data.avatarImageUrl || '',
     grade: data.grade,
     color: data.color,
-    updatedAt: db.serverDate()
+    updatedAt: getDb().serverDate()
   }
 
-  await db.collection('children').doc(childId).update({ data: updateData })
+  await getDb().collection('children').doc(childId).update({ data: updateData })
 
   // 更新本地缓存
   const children = wx.getStorageSync('childrenCache') || []
@@ -96,7 +111,7 @@ async function updateChild(childId, data) {
  * 删除身份
  */
 async function deleteChild(childId) {
-  await db.collection('children').doc(childId).remove()
+  await getDb().collection('children').doc(childId).remove()
 
   // 更新本地缓存
   let children = wx.getStorageSync('childrenCache') || []
@@ -115,17 +130,18 @@ async function deleteChild(childId) {
  * 获取单条动态
  */
 async function getPostById(postId) {
-  const { data } = await db.collection('posts').doc(postId).get()
+  const { data } = await getDb().collection('posts').doc(postId).get()
   return data
 }
 
 /**
  * 获取动态列表
  */
-async function getPosts() {
-  const { data } = await db.collection('posts')
+async function getPosts(skip = 0, limit = 20) {
+  const { data } = await getDb().collection('posts')
     .orderBy('created_at', 'desc')
-    .limit(50)
+    .skip(skip)
+    .limit(limit)
     .get()
   return data
 }
@@ -134,15 +150,16 @@ async function getPosts() {
  * 添加动态
  */
 async function addPost(post) {
-  // 先上传文件（如有）
+  const fileId = Date.now() + '_' + Math.random().toString(36).substr(2, 6)
+
   let imageUrl = post.content.image_url || ''
   let voiceUrl = post.content.voice_url || ''
 
   if (imageUrl && !imageUrl.startsWith('cloud://')) {
-    imageUrl = await uploadFile(imageUrl, `posts/images/${post._id}`)
+    imageUrl = await uploadFile(imageUrl, `posts/images/${fileId}`)
   }
   if (voiceUrl && !voiceUrl.startsWith('cloud://')) {
-    voiceUrl = await uploadFile(voiceUrl, `posts/voices/${post._id}`)
+    voiceUrl = await uploadFile(voiceUrl, `posts/voices/${fileId}`)
   }
 
   const postData = {
@@ -154,10 +171,10 @@ async function addPost(post) {
       voice_url: voiceUrl
     },
     likes: [],
-    created_at: db.serverDate()
+    created_at: getDb().serverDate()
   }
 
-  const { _id } = await db.collection('posts').add({ data: postData })
+  const { _id } = await getDb().collection('posts').add({ data: postData })
   return { ...postData, _id, created_at: Date.now() }
 }
 
@@ -165,15 +182,15 @@ async function addPost(post) {
  * 删除动态
  */
 async function deletePost(postId) {
-  await db.collection('posts').doc(postId).remove()
+  await getDb().collection('posts').doc(postId).remove()
   // 同时删除相关评论和通知
-  const comments = await db.collection('comments').where({ post_id: postId }).get()
+  const comments = await getDb().collection('comments').where({ post_id: postId }).get()
   for (const c of comments.data) {
-    await db.collection('comments').doc(c._id).remove()
+    await getDb().collection('comments').doc(c._id).remove()
   }
-  const notifs = await db.collection('notifications').where({ post_id: postId }).get()
+  const notifs = await getDb().collection('notifications').where({ post_id: postId }).get()
   for (const n of notifs.data) {
-    await db.collection('notifications').doc(n._id).remove()
+    await getDb().collection('notifications').doc(n._id).remove()
   }
 }
 
@@ -181,7 +198,7 @@ async function deletePost(postId) {
  * 切换点赞
  */
 async function toggleLike(postId, childId) {
-  const { data: post } = await db.collection('posts').doc(postId).get()
+  const { data: post } = await getDb().collection('posts').doc(postId).get()
 
   const likes = post.likes || []
   const index = likes.indexOf(childId)
@@ -192,7 +209,7 @@ async function toggleLike(postId, childId) {
     likes.push(childId)
   }
 
-  await db.collection('posts').doc(postId).update({
+  await getDb().collection('posts').doc(postId).update({
     data: { likes }
   })
 
@@ -210,10 +227,10 @@ async function addComment(comment) {
     child_id: comment.child_id,
     type: comment.type,
     content: comment.content,
-    created_at: db.serverDate()
+    created_at: getDb().serverDate()
   }
 
-  const { _id } = await db.collection('comments').add({ data: commentData })
+  const { _id } = await getDb().collection('comments').add({ data: commentData })
   return { ...commentData, _id, created_at: Date.now() }
 }
 
@@ -221,7 +238,7 @@ async function addComment(comment) {
  * 获取某条动态的评论
  */
 async function getComments(postId) {
-  const { data } = await db.collection('comments')
+  const { data } = await getDb().collection('comments')
     .where({ post_id: postId })
     .orderBy('created_at', 'asc')
     .get()
@@ -240,10 +257,10 @@ async function addNotification(notification) {
     post_id: notification.post_id,
     type: notification.type,
     read: false,
-    created_at: db.serverDate()
+    created_at: getDb().serverDate()
   }
 
-  const { _id } = await db.collection('notifications').add({ data: notifData })
+  const { _id } = await getDb().collection('notifications').add({ data: notifData })
   return { ...notifData, _id }
 }
 
@@ -251,7 +268,7 @@ async function addNotification(notification) {
  * 获取通知
  */
 async function getNotifications(childId) {
-  const { data } = await db.collection('notifications')
+  const { data } = await getDb().collection('notifications')
     .where({ to_child_id: childId })
     .orderBy('created_at', 'desc')
     .limit(50)
@@ -263,7 +280,7 @@ async function getNotifications(childId) {
  * 标记通知已读
  */
 async function markNotificationsRead(childId) {
-  const { data } = await db.collection('notifications')
+  const { data } = await getDb().collection('notifications')
     .where({
       to_child_id: childId,
       read: false
@@ -272,7 +289,7 @@ async function markNotificationsRead(childId) {
 
   if (data.length === 0) return
   const tasks = data.map(n =>
-    db.collection('notifications').doc(n._id).update({
+    getDb().collection('notifications').doc(n._id).update({
       data: { read: true }
     }).catch(e => {
       console.error('标记通知已读失败', n._id, e)
@@ -286,7 +303,7 @@ async function markNotificationsRead(childId) {
  */
 async function markNotificationRead(notificationId) {
   if (!notificationId) return
-  await db.collection('notifications').doc(notificationId).update({
+  await getDb().collection('notifications').doc(notificationId).update({
     data: { read: true }
   })
 }
@@ -441,7 +458,7 @@ async function initMockDataToCloud() {
   ]
 
   for (const post of mockPosts) {
-    await db.collection('posts').add({ data: post })
+    await getDb().collection('posts').add({ data: post })
   }
 
   wx.setStorageSync('cloudDataInitialized', true)
