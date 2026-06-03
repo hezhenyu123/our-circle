@@ -36,6 +36,10 @@
       <text class="action-label">创建新身份</text>
       <text class="action-arrow">›</text>
     </view>
+    <view class="action-row action-danger" bindtap="onDeleteIdentity">
+      <text class="action-label">删除身份</text>
+      <text class="action-hint">需要家长验证</text>
+    </view>
     <view class="action-row action-danger" bindtap="onResetData">
       <text class="action-label">重置数据</text>
       <text class="action-hint">需要家长验证</text>

@@ -13,6 +13,7 @@ function clearLocalNotificationReadCache() {
 
 Page({
   _pendingDeletePostId: '',
+  _pendingAction: '',
 
   data: {
     currentChild: null,
@@ -95,6 +96,7 @@ Page({
 
   onLongPressPost(e) {
     this._pendingDeletePostId = e.currentTarget.dataset.id
+    this._pendingAction = 'deletePost'
     this.setData({ showParentModal: true, parentCode: '', parentCodeError: '' })
   },
 
@@ -115,6 +117,12 @@ Page({
   },
 
   onResetData() {
+    this._pendingAction = 'resetData'
+    this.setData({ showParentModal: true, parentCode: '', parentCodeError: '' })
+  },
+
+  onDeleteIdentity() {
+    this._pendingAction = 'deleteIdentity'
     this.setData({ showParentModal: true, parentCode: '', parentCodeError: '' })
   },
 
@@ -124,32 +132,91 @@ Page({
 
   async onConfirmParentCode() {
     const savedCode = wx.getStorageSync('parentCode') || '1234'
-    if (this.data.parentCode === savedCode) {
-      this.setData({ showParentModal: false })
+    if (this.data.parentCode !== savedCode) {
+      this.setData({ parentCodeError: '验证码不正确' })
+      return
+    }
 
-      if (this._pendingDeletePostId) {
-        const postId = this._pendingDeletePostId
-        this._pendingDeletePostId = ''
-        wx.showModal({
-          title: '删除动态',
-          content: '确定要删除这条动态吗？',
-          confirmColor: '#FF6B6B',
-          success: async (res) => {
-            if (res.confirm) {
-              try {
-                await cloudData.deletePost(postId)
-                wx.showToast({ title: '已删除', icon: 'success' })
-                await this.loadProfile()
-              } catch (e) {
-                wx.showToast({ title: '删除失败', icon: 'none' })
-              }
+    const action = this._pendingAction
+    this._pendingAction = ''
+    this.setData({ showParentModal: false })
+
+    if (action === 'deletePost') {
+      const postId = this._pendingDeletePostId
+      this._pendingDeletePostId = ''
+      wx.showModal({
+        title: '删除动态',
+        content: '确定要删除这条动态吗？',
+        confirmColor: '#FF6B6B',
+        success: async (res) => {
+          if (res.confirm) {
+            try {
+              await cloudData.deletePost(postId)
+              wx.showToast({ title: '已删除', icon: 'success' })
+              await this.loadProfile()
+            } catch (e) {
+              wx.showToast({ title: '删除失败', icon: 'none' })
             }
           }
-        })
-        return
-      }
+        }
+      })
+      return
+    }
 
-      // 重置数据
+    if (action === 'deleteIdentity') {
+      const currentChild = cloudData.getCurrentChild()
+      if (!currentChild) return
+
+      wx.showModal({
+        title: '删除身份',
+        content: `将删除「${currentChild.nickname}」的所有动态、评论及相关文件，确定吗？`,
+        confirmColor: '#FF6B6B',
+        success: async (res) => {
+          if (res.confirm) {
+            try {
+              const result = await wx.cloud.callFunction({
+                name: 'delete-identity',
+                data: { childId: currentChild._id }
+              })
+              const cloudResult = result && result.result ? result.result : null
+              if (!cloudResult || cloudResult.code !== 0) {
+                throw new Error(cloudResult && cloudResult.message ? cloudResult.message : '云函数执行失败')
+              }
+
+              let children = wx.getStorageSync('childrenCache') || []
+              children = children.filter(c => c._id !== currentChild._id)
+              wx.setStorageSync('childrenCache', children)
+
+              const currentChildId = wx.getStorageSync('currentChildId')
+              if (currentChildId === currentChild._id) {
+                if (children.length > 0) {
+                  wx.setStorageSync('currentChildId', children[0]._id)
+                } else {
+                  wx.removeStorageSync('currentChildId')
+                }
+              }
+
+              wx.removeStorageSync('postsCache')
+              wx.removeStorageSync('commentsCache')
+              clearLocalNotificationReadCache()
+
+              wx.showToast({ title: '已删除', icon: 'success' })
+              setTimeout(() => { this.initPage() }, 1000)
+            } catch (e) {
+              console.error('删除身份失败', e)
+              wx.showModal({
+                title: '删除失败',
+                content: (e && e.message) ? e.message : '请查看控制台日志',
+                showCancel: false
+              })
+            }
+          }
+        }
+      })
+      return
+    }
+
+    if (action === 'resetData') {
       wx.showModal({
         title: '重置数据',
         content: '将清除所有数据恢复初始状态，确定吗？',
@@ -176,7 +243,6 @@ Page({
                 }
               }
 
-              // 清除本地缓存
               const code = wx.getStorageSync('parentCode')
               wx.removeStorageSync('childrenCache')
               wx.removeStorageSync('postsCache')
@@ -198,8 +264,6 @@ Page({
           }
         }
       })
-    } else {
-      this.setData({ parentCodeError: '验证码不正确' })
     }
   },
 

@@ -22,12 +22,56 @@ async function clearCollection(name) {
   return removed
 }
 
+async function collectFileIDs() {
+  const fileIDs = []
+
+  while (true) {
+    const { data } = await db.collection('posts').limit(100).get()
+    if (!data.length) break
+
+    for (const post of data) {
+      const content = post.content || {}
+      if (content.image_url && content.image_url.startsWith('cloud://')) {
+        fileIDs.push(content.image_url)
+      }
+      if (content.voice_url && content.voice_url.startsWith('cloud://')) {
+        fileIDs.push(content.voice_url)
+      }
+    }
+
+    if (data.length < 100) break
+  }
+
+  return fileIDs
+}
+
+async function deleteCloudFiles(fileIDs) {
+  if (!fileIDs.length) return 0
+
+  let deleted = 0
+
+  for (let i = 0; i < fileIDs.length; i += 50) {
+    const batch = fileIDs.slice(i, i + 50)
+    try {
+      const { fileList } = await cloud.deleteFile({ fileList: batch })
+      deleted += fileList.filter(f => f.status === 0).length
+    } catch (e) {
+      console.error('deleteFile batch failed', e)
+    }
+  }
+
+  return deleted
+}
+
 exports.main = async () => {
-  const version = 'reset-data-v2'
+  const version = 'reset-data-v3'
   const collections = ['notifications', 'comments', 'posts', 'children']
   const result = {}
 
   try {
+    const fileIDs = await collectFileIDs()
+    result.filesDeleted = await deleteCloudFiles(fileIDs)
+
     for (const name of collections) {
       result[name] = await clearCollection(name)
     }
