@@ -84,31 +84,69 @@
     </view>
 
     <view
-      class="my-post-item card"
+      class="my-post-card type-{{item.type}}"
       wx:for="{{myPosts}}"
       wx:key="_id"
       data-id="{{item._id}}"
       bindtap="onTapPost"
       bindlongpress="onLongPressPost"
     >
-      <view class="my-post-main">
-        <!-- 动态内容摘要 -->
-        <view class="post-summary">
-          <text class="summary-type">{{item.type === 'voice' ? '🎤' : item.type === 'photo' ? '📸' : item.type === 'text' ? '✏️' : '🎨'}}</text>
-          <text class="summary-text" wx:if="{{item.type === 'voice'}}">语音动态 {{item.content.voice_duration}}"</text>
-          <text class="summary-text" wx:elif="{{item.content.text}}">{{item.content.text}}</text>
-          <text class="summary-text" wx:else>{{item.type === 'photo' ? '拍照动态' : item.type === 'drawing' ? '画画动态' : '文字动态'}}</text>
+      <view class="mpc-type-bar">
+        <view class="mpc-type-chip chip-{{item.type}}">
+          <text class="mpc-type-emoji">{{item.type === 'voice' ? '🎤' : item.type === 'photo' ? '📸' : item.type === 'text' ? '✏️' : '🎨'}}</text>
+          <text class="mpc-type-name">{{item.type === 'voice' ? '语音' : item.type === 'photo' ? '拍照' : item.type === 'text' ? '文字' : '画画'}}</text>
         </view>
-        <image
-          wx:if="{{item.content.image_url}}"
-          class="post-thumb"
-          src="{{item.content.image_url}}"
-          mode="aspectFill"
-        />
+        <text class="mpc-time">{{item.timeText}}</text>
       </view>
-      <view class="post-meta">
-        <text class="meta-time">{{item.timeText}}</text>
-        <text class="meta-stats">❤️{{item.likes.length}} 💬{{item.commentCount}}</text>
+
+      <view class="mpc-body" wx:if="{{item.type === 'photo' || item.type === 'drawing'}}">
+        <view class="mpc-media-row">
+          <image
+            class="mpc-thumb-img"
+            src="{{item.content.image_url}}"
+            mode="aspectFill"
+          />
+          <view class="mpc-text-side" wx:if="{{item.content.text || item.content.mood_emoji}}">
+            <text class="mpc-caption mpc-caption-wrap" wx:if="{{item.content.text}}">{{item.content.text}}</text>
+            <text class="mpc-mood" wx:if="{{item.content.mood_emoji}}">{{item.content.mood_emoji}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="mpc-body mpc-body-text" wx:elif="{{item.type === 'text'}}">
+        <text class="mpc-text-preview" wx:if="{{item.content.text}}">{{item.content.text}}</text>
+        <view class="mpc-text-media" wx:if="{{item.content.image_url}}">
+          <image class="mpc-text-img" src="{{item.content.image_url}}" mode="aspectFill" />
+        </view>
+        <view class="mpc-mood-row" wx:if="{{item.content.mood_emoji}}">
+          <text class="mpc-mood">{{item.content.mood_emoji}}</text>
+        </view>
+      </view>
+
+      <view class="mpc-body mpc-body-voice" wx:elif="{{item.type === 'voice'}}">
+        <view class="mpc-voice-bubble">
+          <text class="mpc-voice-icon">🎤</text>
+          <view class="mpc-voice-bars">
+            <view class="mpc-vbar"></view>
+            <view class="mpc-vbar"></view>
+            <view class="mpc-vbar"></view>
+            <view class="mpc-vbar"></view>
+            <view class="mpc-vbar"></view>
+          </view>
+          <text class="mpc-voice-dur">{{item.content.voice_duration}}"</text>
+        </view>
+        <text class="mpc-caption" wx:if="{{item.content.text}}">{{item.content.text}}</text>
+      </view>
+
+      <view class="mpc-footer">
+        <view class="mpc-stat">
+          <text class="mpc-stat-icon">🤍</text>
+          <text class="mpc-stat-num">{{item.likes.length}}</text>
+        </view>
+        <view class="mpc-stat">
+          <text class="mpc-stat-icon">💬</text>
+          <text class="mpc-stat-num">{{item.commentCount}}</text>
+        </view>
       </view>
     </view>
   </view>

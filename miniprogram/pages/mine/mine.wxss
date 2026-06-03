@@ -130,61 +130,226 @@
   color: #9A8C82;
 }
 
-.my-post-item {
-  margin-bottom: 18rpx;
+.my-post-card {
+  margin-bottom: 20rpx;
   border-radius: 28rpx;
+  padding: 24rpx;
+  background: #FFFCF8;
+  border: 1rpx solid rgba(243, 226, 215, 0.9);
+  box-shadow: 0 10rpx 24rpx rgba(194, 170, 157, 0.1);
+  transition: transform 0.15s ease;
 }
 
-.my-post-main {
+.my-post-card:active {
+  transform: scale(0.985);
+}
+
+.my-post-card.type-photo {
+  background: linear-gradient(180deg, #FFFDFC, #FFF7EF);
+}
+
+.my-post-card.type-drawing {
+  background: linear-gradient(180deg, #FFFEFC, #F3FBF6);
+}
+
+.my-post-card.type-voice {
+  background: linear-gradient(180deg, #FFFEFC, #F3F8FF);
+}
+
+.my-post-card.type-text {
+  background: linear-gradient(180deg, #FFFDFC, #FFF9F4);
+}
+
+.mpc-type-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.mpc-type-chip {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+}
+
+.chip-photo {
+  background: linear-gradient(135deg, #FFE8DD, #FFF1E7);
+}
+
+.chip-drawing {
+  background: linear-gradient(135deg, #DDF5EA, #EAF7F0);
+}
+
+.chip-voice {
+  background: linear-gradient(135deg, #DDF0FF, #E8F3FA);
+}
+
+.chip-text {
+  background: linear-gradient(135deg, #FFF3D7, #FFF8E7);
+}
+
+.mpc-type-emoji {
+  font-size: 24rpx;
+}
+
+.mpc-type-name {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: #7A6F68;
+}
+
+.mpc-time {
+  font-size: 22rpx;
+  color: #B3A59A;
+}
+
+.mpc-body {
+  margin-bottom: 16rpx;
+}
+
+.mpc-media-row {
   display: flex;
   align-items: flex-start;
   gap: 16rpx;
 }
 
-.post-summary {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  margin-bottom: 12rpx;
+.mpc-thumb-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+  background: #F1EAE3;
+}
+
+.mpc-text-side {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
-.summary-type {
-  font-size: 32rpx;
-}
-
-.summary-text {
-  font-size: 28rpx;
-  color: #2F2A26;
+.mpc-caption {
+  display: block;
+  font-size: 26rpx;
+  color: #5A4E47;
+  line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mpc-caption-wrap {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mpc-body-text {
+  padding: 4rpx 0;
+}
+
+.mpc-text-preview {
+  font-size: 30rpx;
+  color: #2F2A26;
+  line-height: 1.65;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.mpc-text-media {
+  margin-top: 12rpx;
+}
+
+.mpc-text-img {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 20rpx;
+  background: #F1EAE3;
+}
+
+.mpc-mood-row {
+  margin-top: 10rpx;
+}
+
+.mpc-mood {
+  font-size: 40rpx;
+}
+
+.mpc-body-voice {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.mpc-voice-bubble {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #AEE483, #97D86E);
+  border-radius: 24rpx;
+  padding: 18rpx 22rpx;
+  gap: 12rpx;
+  min-width: 200rpx;
+  max-width: 380rpx;
+}
+
+.mpc-voice-icon {
+  font-size: 28rpx;
+}
+
+.mpc-voice-bars {
+  display: flex;
+  align-items: center;
+  gap: 5rpx;
   flex: 1;
 }
 
-.post-thumb {
-  width: 132rpx;
-  height: 132rpx;
-  border-radius: 22rpx;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #F7ECE2, #EEF7FF);
+.mpc-vbar {
+  width: 5rpx;
+  border-radius: 3rpx;
+  background: rgba(0, 0, 0, 0.18);
 }
 
-.post-meta {
+.mpc-vbar:nth-child(1) { height: 8rpx; }
+.mpc-vbar:nth-child(2) { height: 18rpx; }
+.mpc-vbar:nth-child(3) { height: 26rpx; }
+.mpc-vbar:nth-child(4) { height: 16rpx; }
+.mpc-vbar:nth-child(5) { height: 10rpx; }
+
+.mpc-voice-dur {
+  font-size: 22rpx;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.mpc-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 4rpx;
+  gap: 20rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx solid #F3E6DB;
 }
 
-.meta-time {
-  font-size: 22rpx;
-  color: #9A8C82;
+.mpc-stat {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
 }
 
-.meta-stats {
-  font-size: 22rpx;
+.mpc-stat-icon {
+  font-size: 28rpx;
+}
+
+.mpc-stat-num {
+  font-size: 24rpx;
   color: #9A8C82;
 }
 
