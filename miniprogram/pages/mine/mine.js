@@ -3,6 +3,14 @@ const app = getApp()
 const util = require('../../utils/util.js')
 const cloudData = require('../../utils/cloud-data.js')
 
+function clearLocalNotificationReadCache() {
+  const info = wx.getStorageInfoSync()
+  const keys = (info && info.keys) || []
+  keys
+    .filter(key => key.indexOf('readNotificationIds_') === 0)
+    .forEach(key => wx.removeStorageSync(key))
+}
+
 Page({
   _pendingDeletePostId: '',
 
@@ -149,27 +157,43 @@ Page({
         success: async (res) => {
           if (res.confirm) {
             try {
-              // 删除云端所有数据
-              const posts = await cloudData.getPosts()
-              for (const p of posts) {
-                await cloudData.deletePost(p._id)
+              const result = await wx.cloud.callFunction({
+                name: 'reset-data'
+              })
+              const cloudResult = result && result.result ? result.result : null
+              const cloudResultCode = cloudResult && Object.prototype.hasOwnProperty.call(cloudResult, 'code')
+                ? cloudResult.code
+                : null
+
+              if (cloudResultCode !== 0 && cloudResultCode !== '0') {
+                const [posts, children] = await Promise.all([
+                  cloudData.getPosts(),
+                  cloudData.syncChildren()
+                ])
+
+                if (posts.length > 0 || children.length > 0) {
+                  throw new Error('reset-data 云函数未返回预期结果，请重新部署云函数 reset-data')
+                }
               }
-              const children = cloudData.getChildren()
-              for (const c of children) {
-                await cloudData.deleteChild(c._id)
-              }
+
               // 清除本地缓存
               const code = wx.getStorageSync('parentCode')
               wx.removeStorageSync('childrenCache')
               wx.removeStorageSync('postsCache')
               wx.removeStorageSync('commentsCache')
               wx.removeStorageSync('currentChildId')
+              clearLocalNotificationReadCache()
               if (code) wx.setStorageSync('parentCode', code)
 
               wx.showToast({ title: '已重置', icon: 'success' })
               setTimeout(() => { this.initPage() }, 1000)
             } catch (e) {
-              wx.showToast({ title: '重置失败', icon: 'none' })
+              console.error('重置数据失败', e)
+              wx.showModal({
+                title: '重置失败',
+                content: (e && e.message) ? e.message : '请查看控制台日志',
+                showCancel: false
+              })
             }
           }
         }
