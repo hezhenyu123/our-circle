@@ -56,11 +56,15 @@
   justify-content: center;
   transition: all 0.2s;
   border: 4rpx solid transparent;
+  box-sizing: content-box;
 }
 
 .color-dot.active {
-  border-color: #2F2A26;
-  transform: scale(1.15);
+  border-color: #FFFFFF;
+  transform: scale(1.18);
+  box-shadow:
+    0 0 0 4rpx var(--accent-primary),
+    0 6rpx 16rpx rgba(0, 0, 0, 0.18);
 }
 
 .color-dot.dim {

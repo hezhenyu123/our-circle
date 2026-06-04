@@ -1,0 +1,18 @@
+<!-- components/voice-player/voice-player.wxml -->
+<view
+  class="voice-bubble {{isPlaying ? 'playing' : ''}}"
+  style="{{width ? 'width:' + width + 'rpx;' : ''}}"
+  catchtap="onTap"
+  hover-class="voice-bubble-hover"
+  hover-stay-time="100"
+>
+  <text class="voice-icon">{{isPlaying ? '🔊' : '🎤'}}</text>
+  <view class="voice-bars">
+    <view class="vbar"></view>
+    <view class="vbar"></view>
+    <view class="vbar"></view>
+    <view class="vbar"></view>
+    <view class="vbar"></view>
+  </view>
+  <text class="voice-duration">{{duration}}"</text>
+</view>

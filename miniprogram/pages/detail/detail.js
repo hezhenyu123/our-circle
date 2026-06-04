@@ -184,29 +184,5 @@ Page({
     }
   },
 
-  onCancelParentCode() { this.setData({ showParentModal: false }) },
-
-  // 语音播放
-  _audioContext: null,
-  isPlayingVoice: false,
-
-  onTapVoice(e) {
-    const voiceUrl = e.currentTarget.dataset.url
-    if (!voiceUrl) return
-
-    if (this._audioContext) {
-      this._audioContext.stop()
-      this._audioContext.destroy()
-    }
-
-    this.setData({ isPlayingVoice: true })
-
-    const audio = wx.createInnerAudioContext()
-    audio.src = voiceUrl
-    this._audioContext = audio
-
-    audio.onEnded(() => { this.setData({ isPlayingVoice: false }) })
-    audio.onError(() => { this.setData({ isPlayingVoice: false }); wx.showToast({ title: '播放失败', icon: 'none' }) })
-    audio.play()
-  }
+  onCancelParentCode() { this.setData({ showParentModal: false }) }
 })

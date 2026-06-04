@@ -1,5 +1,8 @@
 {
   "navigationBarTitleText": "我们的圈子",
   "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark"
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "post-card": "/components/post-card/post-card"
+  }
 }

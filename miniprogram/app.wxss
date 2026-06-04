@@ -1,15 +1,102 @@
 /* app.wxss - 全局样式 */
+
+/* ============================================================
+ * Design Tokens (来源: DESIGN.md)
+ * 各页面 wxss 请尽量引用 var(--xxx) 而非硬编码色值/数值
+ * ============================================================ */
 page {
+  /* ---- Color · Background ---- */
+  --bg-page: #F6F3EE;
+  --bg-soft: #FFF7F2;
+  --bg-surface: #FFFCF8;
+  --bg-surface-strong: #FFFFFF;
+
+  /* ---- Color · Line ---- */
+  --line-soft: #F0E4DA;
+
+  /* ---- Color · Text ---- */
+  --text-primary: #2F2A26;
+  --text-secondary: #7A6F68;
+  --text-tertiary: #B3A59A;
+
+  /* ---- Color · Accent ---- */
+  --accent-primary: #F56B6F;
+  --accent-primary-strong: #E85A61;
+  --accent-primary-soft: #FFE5E1;
+  --accent-yellow: #F6C969;
+  --accent-mint: #8CCFBC;
+  --accent-sky: #94BEEA;
+
+  /* ---- Color · Semantic ---- */
+  --success: #69B884;
+  --danger-soft: #FFF0F1;
+
+  /* ---- Spacing ladder ---- */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+
+  /* ---- Radius ---- */
+  --radius-chip: 20rpx;
+  --radius-card: 30rpx;
+  --radius-pill: 44rpx;
+
+  /* ---- Elevation ---- */
+  --shadow-card-soft: 0 12rpx 32rpx rgba(194, 170, 157, 0.12);
+  --shadow-card-strong: 0 16rpx 40rpx rgba(194, 170, 157, 0.20);
+  --shadow-accent: 0 10rpx 26rpx rgba(245, 107, 111, 0.24);
+
+  /* ---- Motion ---- */
+  --motion-fast: 0.15s ease;
+  --motion-base: 0.20s ease;
+
+  /* ---- Base typography ---- */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #F6F3EE;
-  color: #2F2A26;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   font-size: 28rpx;
   line-height: 1.6;
 }
 
-/* 全局工具类 */
+/* ============================================================
+ * Typography classes (来源: DESIGN.md Typography)
+ * 同一信息层级请在所有页面统一引用以下 class
+ * ============================================================ */
+.t-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.t-section {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.t-body {
+  font-size: 28rpx;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.t-meta {
+  font-size: 24rpx;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+ * 全局工具类
+ * ============================================================ */
 .container {
-  padding: 24rpx;
+  padding: var(--space-md);
 }
 
 .flex-row {
@@ -43,13 +130,13 @@ page {
 
 /* 圆角卡片 */
 .card {
-  background: #FFFCF8;
-  border-radius: 30rpx;
-  padding: 24rpx;
-  margin-bottom: 24rpx;
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
   border: 1rpx solid rgba(243, 226, 215, 0.9);
-  box-shadow: 0 12rpx 32rpx rgba(194, 170, 157, 0.12);
-  transition: transform 0.15s ease;
+  box-shadow: var(--shadow-card-soft);
+  transition: transform var(--motion-fast);
 }
 
 .card:active {
@@ -77,14 +164,14 @@ page {
 
 /* 按钮 */
 .btn-primary {
-  background: linear-gradient(135deg, #F56B6F, #FF8E77);
+  background: linear-gradient(135deg, var(--accent-primary), #FF8E77);
   color: #FFFFFF;
   border: none;
-  border-radius: 44rpx;
+  border-radius: var(--radius-pill);
   padding: 20rpx 48rpx;
   font-size: 30rpx;
   font-weight: 600;
-  box-shadow: 0 10rpx 26rpx rgba(245, 107, 111, 0.24);
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-primary::after {

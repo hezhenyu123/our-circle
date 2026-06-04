@@ -87,90 +87,19 @@
     </view>
 
     <view
-      class="post-card card {{item.isOwn ? 'own-post' : ''}}"
+      class="post-card-wrap"
       wx:for="{{posts}}"
       wx:key="_id"
-      data-id="{{item._id}}"
-      bindtap="onTapPost"
-      bindlongpress="onLongPressPost"
     >
-      <!-- 动态头部：头像+昵称+时间 -->
-      <view class="post-header flex-between">
-        <view class="post-author flex-row">
-          <view class="avatar" style="background: {{item.childInfo.color}}20;">
-            <image wx:if="{{item.childInfo.avatarType === 'image' && item.childInfo.avatarImageUrl}}" class="avatar-img" src="{{item.childInfo.avatarImageUrl}}" mode="aspectFill" />
-            <text wx:else>{{item.childInfo.avatar}}</text>
-          </view>
-          <view class="author-info">
-            <text class="author-name">{{item.childInfo.nickname}}</text>
-            <text class="post-time">{{item.timeText}}</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 动态内容 -->
-      <view class="post-content">
-        <!-- 语音动态 -->
-        <block wx:if="{{item.type === 'voice'}}">
-          <view class="voice-bubble {{item.isPlaying ? 'playing' : ''}}" style="width: {{item.voiceBubbleWidth}}rpx;" data-url="{{item.content.voice_url}}" data-id="{{item._id}}" catchtap="onTapVoice">
-            <text class="voice-icon">🎤</text>
-            <view class="voice-bars">
-              <view class="vbar"></view>
-              <view class="vbar"></view>
-              <view class="vbar"></view>
-              <view class="vbar"></view>
-              <view class="vbar"></view>
-            </view>
-            <text class="voice-duration">{{item.content.voice_duration}}"</text>
-          </view>
-        </block>
-
-        <!-- 拍照动态 -->
-        <block wx:if="{{item.type === 'photo'}}">
-          <image class="post-image" src="{{item.content.image_url}}" mode="aspectFill" />
-          <view class="photo-text" wx:if="{{item.content.mood_emoji}}">
-            <text class="mood-emoji">{{item.content.mood_emoji}}</text>
-            <text wx:if="{{item.content.text}}">{{item.content.text}}</text>
-          </view>
-        </block>
-
-        <!-- 画画动态 -->
-        <block wx:if="{{item.type === 'drawing'}}">
-          <image class="post-image drawing" src="{{item.content.image_url}}" mode="aspectFit" />
-        </block>
-
-        <!-- 文字动态 -->
-        <block wx:if="{{item.type === 'text'}}">
-          <view class="text-content">
-            <text class="text-body">{{item.content.text}}</text>
-            <view class="text-mood" wx:if="{{item.content.mood_emoji}}">
-              <text class="mood-emoji">{{item.content.mood_emoji}}</text>
-            </view>
-          </view>
-          <image wx:if="{{item.content.image_url}}" class="post-image text-photo" src="{{item.content.image_url}}" mode="aspectFill" />
-          <view class="emoji-stickers flex-row" wx:if="{{item.emojiStickers && item.emojiStickers.length > 0}}">
-            <text class="sticker" wx:for="{{item.emojiStickers}}" wx:for-item="sticker" wx:key="keyword">
-              {{sticker.emoji}}
-            </text>
-          </view>
-        </block>
-      </view>
-
-      <!-- 互动栏 -->
-      <view class="post-actions flex-row">
-        <view
-          class="action-btn {{item.isLiked ? 'liked' : ''}} {{item.likeAnim ? 'like-anim' : ''}}"
-          data-id="{{item._id}}"
-          catchtap="onTapLike"
-        >
-          <text class="action-icon">{{item.isLiked ? '❤️' : '🤍'}}</text>
-          <text class="action-count">{{item.likes.length || ''}}</text>
-        </view>
-        <view class="action-btn" data-id="{{item._id}}" catchtap="onTapComment">
-          <text class="action-icon">💬</text>
-          <text class="action-count">{{item.commentCount || ''}}</text>
-        </view>
-      </view>
+      <post-card
+        post="{{item}}"
+        show-actions="{{true}}"
+        tint-index="{{item.tintIndex}}"
+        bind:tap="onTapPostCard"
+        bind:longpress="onLongPressPostCard"
+        bind:like="onLikePostCard"
+        bind:comment="onCommentPostCard"
+      />
     </view>
 
     <!-- 底部间距 -->
@@ -206,7 +135,7 @@
   </view>
 
   <!-- 发动态浮球 -->
-  <view class="fab-btn" bindtap="onTapCreate" wx:if="{{!parentMode}}">
+  <view class="fab-btn" bindtap="onTapCreate" hover-class="fab-btn-hover" hover-stay-time="100" wx:if="{{!parentMode}}">
     <text class="fab-icon">＋</text>
   </view>
   </block>

@@ -86,10 +86,28 @@
 .section-title {
   display: flex;
   align-items: baseline;
-  padding: 36rpx 4rpx 18rpx;
-  font-size: 30rpx;
+  justify-content: space-between;
+  padding: 48rpx 4rpx 20rpx;
+  margin-top: 16rpx;
+  font-size: 32rpx;
   font-weight: 600;
-  color: #2F2A26;
+  color: var(--text-primary);
+  position: relative;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  top: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--line-soft), transparent);
+}
+
+.section-title .section-sub {
+  font-weight: 400;
 }
 
 .my-posts {

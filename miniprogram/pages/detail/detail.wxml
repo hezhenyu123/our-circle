@@ -23,17 +23,12 @@
     <view class="detail-content">
       <!-- 语音动态 -->
       <block wx:if="{{post.type === 'voice'}}">
-        <view class="voice-bubble {{isPlayingVoice ? 'playing' : ''}}" style="width: {{voiceBubbleWidth}}rpx;" bindtap="onTapVoice" data-url="{{post.content.voice_url}}">
-          <text class="voice-icon">🎤</text>
-          <view class="voice-bars">
-            <view class="vbar"></view>
-            <view class="vbar"></view>
-            <view class="vbar"></view>
-            <view class="vbar"></view>
-            <view class="vbar"></view>
-          </view>
-          <text class="voice-duration">{{post.content.voice_duration}}"</text>
-        </view>
+        <voice-player
+          src="{{post.content.voice_url}}"
+          duration="{{post.content.voice_duration}}"
+          player-id="{{post._id}}"
+          width="{{voiceBubbleWidth}}"
+        />
       </block>
 
       <!-- 拍照动态 -->
@@ -147,6 +142,9 @@
         value="{{commentText}}"
         bindinput="onCommentTextInput"
         auto-focus="{{showCommentInput}}"
+        adjust-position="{{true}}"
+        cursor-spacing="24"
+        show-confirm-bar="{{false}}"
       />
     </view>
   </view>

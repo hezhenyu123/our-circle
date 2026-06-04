@@ -24,13 +24,18 @@
   <!-- 消息列表 -->
   <view class="notification-list" wx:else>
     <view
-      class="notification-item card {{item.read ? '' : 'unread'}}"
+      class="notification-item card type-{{item.type}} {{item.read ? '' : 'unread'}}"
       wx:for="{{notifications}}"
       wx:key="_id"
       data-id="{{item.post_id}}"
       data-notification-id="{{item._id}}"
       bindtap="onTapNotification"
+      hover-class="notification-item-hover"
+      hover-stay-time="100"
     >
+      <view class="notif-type-icon type-icon-{{item.type}}">
+        <text>{{item.type === 'like' ? '❤️' : item.type === 'new_post' ? '✨' : '💬'}}</text>
+      </view>
       <view class="notif-avatar" style="background: {{item.fromChild.color}}20;">
         <image wx:if="{{item.fromChild.avatarType === 'image' && item.fromChild.avatarImageUrl}}" class="notif-avatar-img" src="{{item.fromChild.avatarImageUrl}}" mode="aspectFill" />
         <text wx:else>{{item.fromChild.avatar}}</text>

@@ -1,0 +1,96 @@
+<!-- components/post-card/post-card.wxml -->
+<view
+  class="post-card card tint-{{tintIndex}} {{post.isOwn ? 'own-post' : ''}}"
+  bindtap="onTap"
+  bindlongpress="onLongPress"
+>
+  <!-- 头部：头像+昵称+时间 -->
+  <view class="post-header flex-between">
+    <view class="post-author flex-row">
+      <view class="avatar" style="background: {{post.childInfo.color}}20;">
+        <image
+          wx:if="{{post.childInfo.avatarType === 'image' && post.childInfo.avatarImageUrl}}"
+          class="avatar-img"
+          src="{{post.childInfo.avatarImageUrl}}"
+          mode="aspectFill"
+        />
+        <text wx:else>{{post.childInfo.avatar}}</text>
+      </view>
+      <view class="author-info">
+        <text class="author-name">{{post.childInfo.nickname}}</text>
+        <text class="post-time">{{post.timeText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 动态内容 -->
+  <view class="post-content">
+    <!-- 语音 -->
+    <block wx:if="{{post.type === 'voice'}}">
+      <voice-player
+        src="{{post.content.voice_url}}"
+        duration="{{post.content.voice_duration}}"
+        player-id="{{post._id}}"
+        width="{{post.voiceBubbleWidth}}"
+      />
+    </block>
+
+    <!-- 拍照 -->
+    <block wx:if="{{post.type === 'photo'}}">
+      <image class="post-image" src="{{post.content.image_url}}" mode="aspectFill" lazy-load />
+      <view class="photo-text" wx:if="{{post.content.mood_emoji}}">
+        <text class="mood-emoji">{{post.content.mood_emoji}}</text>
+        <text wx:if="{{post.content.text}}">{{post.content.text}}</text>
+      </view>
+    </block>
+
+    <!-- 画画 -->
+    <block wx:if="{{post.type === 'drawing'}}">
+      <image class="post-image drawing" src="{{post.content.image_url}}" mode="aspectFit" lazy-load />
+    </block>
+
+    <!-- 文字 -->
+    <block wx:if="{{post.type === 'text'}}">
+      <view class="text-content">
+        <text class="text-body">{{post.content.text}}</text>
+        <view class="text-mood" wx:if="{{post.content.mood_emoji}}">
+          <text class="mood-emoji">{{post.content.mood_emoji}}</text>
+        </view>
+      </view>
+      <image
+        wx:if="{{post.content.image_url}}"
+        class="post-image text-photo"
+        src="{{post.content.image_url}}"
+        mode="aspectFill"
+        lazy-load
+      />
+      <view class="emoji-stickers flex-row" wx:if="{{post.emojiStickers && post.emojiStickers.length > 0}}">
+        <text class="sticker" wx:for="{{post.emojiStickers}}" wx:for-item="sticker" wx:key="keyword">
+          {{sticker.emoji}}
+        </text>
+      </view>
+    </block>
+  </view>
+
+  <!-- 互动栏 -->
+  <view class="post-actions flex-row" wx:if="{{showActions}}">
+    <view
+      class="action-btn {{post.isLiked ? 'liked' : ''}} {{post.likeAnim ? 'like-anim' : ''}}"
+      catchtap="onLike"
+      hover-class="action-btn-hover"
+      hover-stay-time="100"
+    >
+      <text class="action-icon">{{post.isLiked ? '❤️' : '🤍'}}</text>
+      <text class="action-count">{{post.likes.length || ''}}</text>
+    </view>
+    <view
+      class="action-btn"
+      catchtap="onComment"
+      hover-class="action-btn-hover"
+      hover-stay-time="100"
+    >
+      <text class="action-icon">💬</text>
+      <text class="action-count">{{post.commentCount || ''}}</text>
+    </view>
+  </view>
+</view>

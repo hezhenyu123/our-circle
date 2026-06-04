@@ -113,6 +113,7 @@ Page({
           isOwn,
           emojiStickers,
           voiceBubbleWidth,
+          tintIndex: enrichedPosts.length % 3,
           timeText: util.formatTime(post.created_at)
         })
       }
@@ -141,6 +142,7 @@ Page({
 
       const allComments = wx.getStorageSync('commentsCache') || []
       const enrichedPosts = []
+      const baseOffset = this.data.posts.length
       for (const post of morePosts) {
         const comments = await cloudData.getComments(post._id)
         allComments.push(...comments)
@@ -172,6 +174,7 @@ Page({
           isOwn,
           emojiStickers,
           voiceBubbleWidth,
+          tintIndex: (baseOffset + enrichedPosts.length) % 3,
           timeText: util.formatTime(post.created_at)
         })
       }
@@ -226,6 +229,10 @@ Page({
   // 点赞/取消点赞
   async onTapLike(e) {
     const postId = e.currentTarget.dataset.id
+    await this._doLike(postId)
+  },
+
+  async _doLike(postId) {
     const currentChild = cloudData.getCurrentChild()
     if (!currentChild) return
 
@@ -280,9 +287,38 @@ Page({
     wx.navigateTo({ url: `/pages/detail/detail?id=${postId}&scrollToComment=1` })
   },
 
+  // ============ post-card 组件事件桥接 ============
+  onTapPostCard(e) {
+    const postId = e.detail.post && e.detail.post._id
+    if (!postId) return
+    wx.navigateTo({ url: `/pages/detail/detail?id=${postId}` })
+  },
+
+  onCommentPostCard(e) {
+    const postId = e.detail.post && e.detail.post._id
+    if (!postId) return
+    wx.navigateTo({ url: `/pages/detail/detail?id=${postId}&scrollToComment=1` })
+  },
+
+  onLikePostCard(e) {
+    const postId = e.detail.post && e.detail.post._id
+    if (!postId) return
+    this._doLike(postId)
+  },
+
+  onLongPressPostCard(e) {
+    const postId = e.detail.post && e.detail.post._id
+    if (!postId) return
+    this._doLongPress(postId)
+  },
+
   // 长按
   onLongPressPost(e) {
     const postId = e.currentTarget.dataset.id
+    this._doLongPress(postId)
+  },
+
+  _doLongPress(postId) {
     const currentChild = cloudData.getCurrentChild()
     if (!currentChild) return
     const post = this.data.posts.find(p => p._id === postId)
@@ -376,48 +412,5 @@ Page({
   onCancelParentCode() {
     this.setData({ showParentModal: false })
     this._pendingDeletePostId = ''
-  },
-
-  // 播放语音
-  _playingVoiceId: '',
-  _audioContext: null,
-
-  onTapVoice(e) {
-    const voiceUrl = e.currentTarget.dataset.url
-    const postId = e.currentTarget.dataset.id
-    if (!voiceUrl) return
-
-    if (this._audioContext) {
-      this._audioContext.stop()
-      this._audioContext.destroy()
-    }
-
-    if (this._playingVoiceId) {
-      const oldIdx = this.data.posts.findIndex(p => p._id === this._playingVoiceId)
-      if (oldIdx > -1) this.setData({ [`posts[${oldIdx}].isPlaying`]: false })
-    }
-
-    const idx = this.data.posts.findIndex(p => p._id === postId)
-    if (idx > -1) this.setData({ [`posts[${idx}].isPlaying`]: true })
-    this._playingVoiceId = postId
-
-    const audio = wx.createInnerAudioContext()
-    audio.src = voiceUrl
-    this._audioContext = audio
-
-    audio.onEnded(() => {
-      const i = this.data.posts.findIndex(p => p._id === postId)
-      if (i > -1) this.setData({ [`posts[${i}].isPlaying`]: false })
-      this._playingVoiceId = ''
-    })
-
-    audio.onError(() => {
-      const i = this.data.posts.findIndex(p => p._id === postId)
-      if (i > -1) this.setData({ [`posts[${i}].isPlaying`]: false })
-      this._playingVoiceId = ''
-      wx.showToast({ title: '播放失败', icon: 'none' })
-    })
-
-    audio.play()
   }
 })

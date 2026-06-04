@@ -98,6 +98,8 @@
     <view class="record-btn-wrap" wx:if="{{!voiceRecorded}}">
       <view
         class="record-btn {{isRecording ? 'recording' : ''}}"
+        hover-class="record-btn-pressed"
+        hover-stay-time="100"
         bindtouchstart="onRecordStart"
         bindtouchend="onRecordEnd"
         bindtouchcancel="onRecordEnd"
